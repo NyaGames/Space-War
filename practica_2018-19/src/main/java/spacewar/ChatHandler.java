@@ -32,7 +32,12 @@ public class ChatHandler extends TextWebSocketHandler {
 		}
 	}
 
-
+	public void updateChat(Map<String, Player> players) {
+		this.sessions.clear();
+		for(Player player : players.values()) {
+			this.sessions.put(player.getSession().getId(), player.getSession());
+		}
+	}
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		

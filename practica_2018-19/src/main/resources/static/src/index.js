@@ -108,8 +108,7 @@ window.onload = function() {
 			delete game.global.otherPlayers[msg.id]
 			break;
 
-		case 'CHAT':
-			
+		case 'CHAT':			
 			$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
 			break;
 		default :

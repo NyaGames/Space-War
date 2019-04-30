@@ -60,10 +60,11 @@ Spacewar.gameState.prototype = {
 		this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
-		// Stop the following keys from propagating up to the browser
-		game.input.keyboard.addKeyCapture([ Phaser.Keyboard.W,
-				Phaser.Keyboard.S, Phaser.Keyboard.A, Phaser.Keyboard.D,
-				Phaser.Keyboard.SPACEBAR ]);
+		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.W);
+		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
+		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.A);
+		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.D);
+		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.SPACEBAR);
 
 		game.camera.follow(game.global.myPlayer.image);
 	},

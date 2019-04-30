@@ -45,6 +45,7 @@ public class SpacewarGame {
 		if (count == 0) {
 			this.startGameLoop();
 		}
+		chatHandler.updateChat(players);
 	}
 
 	public Collection<Player> getPlayers() {
@@ -58,6 +59,7 @@ public class SpacewarGame {
 		if (count == 0) {
 			this.stopGameLoop();
 		}
+		chatHandler.updateChat(players);
 	}
 
 	public void addProjectile(int id, Projectile projectile) {
