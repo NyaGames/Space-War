@@ -22,5 +22,5 @@ public class Application implements WebSocketConfigurer {
 	@Bean
 	public WebsocketGameHandler gameHandler() {
 		return new WebsocketGameHandler();
-	}
+	}	
 }

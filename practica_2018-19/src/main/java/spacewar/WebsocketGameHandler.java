@@ -62,6 +62,14 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					game.addProjectile(projectile.getId(), projectile);
 				}
 				break;
+			case "CHAT":			
+				for(Player participant : game.getPlayers()) {
+					if(!participant.getSession().getId().equals(session.getId())) {
+						participant.getSession().sendMessage(message);
+					}
+				}			
+				
+				break;
 			default:
 				break;
 			}

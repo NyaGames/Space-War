@@ -13,7 +13,7 @@ window.onload = function() {
 	}
 
 	// WEBSOCKET CONFIGURATOR
-	game.global.socket = new WebSocket("ws://127.0.0.1:8080/spacewar")
+	game.global.socket = new WebSocket("ws://"+window.location.host+"/spacewar");
 	
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {
@@ -51,6 +51,7 @@ window.onload = function() {
 					name : msg.room
 			}
 			break
+		
 		case 'GAME STATE UPDATE' :
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] GAME STATE UPDATE message recieved')
@@ -105,11 +106,31 @@ window.onload = function() {
 			}
 			game.global.otherPlayers[msg.id].image.destroy()
 			delete game.global.otherPlayers[msg.id]
+			break;
+
+		case 'CHAT':
+			
+			$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
+			break;
 		default :
 			console.dir(msg)
 			break
 		}
 	}
+
+	$("#send-btn").click(() => {
+		var msg = {
+			event: "CHAT",
+			name: $('#name').val(),
+			message: $('#message').val()
+		}
+
+		$('#message').val('');
+
+		$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
+
+		game.global.socket.send(JSON.stringify(msg));
+	});
 
 	// PHASER SCENE CONFIGURATOR
 	game.state.add('bootState', Spacewar.bootState)
@@ -120,6 +141,5 @@ window.onload = function() {
 	game.state.add('roomState', Spacewar.roomState)
 	game.state.add('gameState', Spacewar.gameState)
 
-	game.state.start('bootState')
-
+	game.state.start('bootState')	
 }

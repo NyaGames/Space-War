@@ -32,9 +32,10 @@ public class SpacewarGame {
 	private Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger();
+	private ChatHandler chatHandler = new ChatHandler(players);
 
 	private SpacewarGame() {
-
+		
 	}
 
 	public void addPlayer(Player player) {
