@@ -50,9 +50,17 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.hpBar.anchor.set(0, 0.5);
 		game.global.myPlayer.hpBar.width = 75;
 		game.global.myPlayer.hpBar.height = 10;
+		
+		game.global.myPlayer.boostBar = game.add.sprite(0, 0, 'boostBar');
+		game.global.myPlayer.boostBar.anchor.set(0, 0.5);
+		game.global.myPlayer.boostBar.width = 50;
+		game.global.myPlayer.boostBar.height = 5;
 
 		game.global.myPlayer.name = game.add.text(game.global.myPlayer.x, game.global.myPlayer.y - 50, "Name", { font: "20px Chakra Petch", fill: "#fff", align: "center"});
 		game.global.myPlayer.name.anchor.set(0.5);
+		
+		game.global.myPlayer.ammo = game.add.text(game.global.myPlayer.x, game.global.myPlayer.y - 50, "0", { font: "20px Chakra Petch", fill: "#ffff00", align: "center"});
+		game.global.myPlayer.ammo.anchor.set(0.5);
 		
 	},
 
