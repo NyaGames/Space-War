@@ -71,15 +71,23 @@ window.onload = function() {
 						game.global.myPlayer.image.angle = player.facingAngle
 
 						game.global.myPlayer.hpRedBar.x = player.posX - 37.5
-						game.global.myPlayer.hpRedBar.y = player.posY - 30
+						game.global.myPlayer.hpRedBar.y = player.posY - 35
 
 						game.global.myPlayer.hpBar.x = player.posX - 37.5
-						game.global.myPlayer.hpBar.y = player.posY - 30
+						game.global.myPlayer.hpBar.y = player.posY - 35
 						game.global.myPlayer.hpBar.width = Math.max(0, 75 * player.hp * 0.01)
+						
+						game.global.myPlayer.boostBar.x = player.posX - 37.5
+						game.global.myPlayer.boostBar.y = player.posY - 30
+						game.global.myPlayer.boostBar.width = Math.max(0, 50 * player.boost * 0.1)
 
 						game.global.myPlayer.name.setText(player.name)
 						game.global.myPlayer.name.x = player.posX
-						game.global.myPlayer.name.y = player.posY - 50	
+						game.global.myPlayer.name.y = player.posY - 55	
+						
+						game.global.myPlayer.ammo.setText(player.ammo)
+						game.global.myPlayer.ammo.x = player.posX
+						game.global.myPlayer.ammo.y = player.posY + 40
 
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {

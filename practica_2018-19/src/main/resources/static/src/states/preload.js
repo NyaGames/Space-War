@@ -19,6 +19,7 @@ Spacewar.preloadState.prototype = {
 				Phaser.Loader.TEXTURE_ATLAS_JSON_HASH)
 
 		game.load.image('hpBar', 'assets/images/hpBar.png');
+		game.load.image('boostBar', 'assets/images/boostBar.png');
 		game.load.image('hpRedBar', 'assets/images/hpRedBar.png');
 	},
 
