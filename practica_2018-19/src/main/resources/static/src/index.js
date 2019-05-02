@@ -57,8 +57,13 @@ window.onload = function() {
 				console.log('[DEBUG] GAME STATE UPDATE message recieved')
 				console.dir(msg)
 			}
+			var players = []
+			$('#players').val("");
 			if (typeof game.global.myPlayer.image !== 'undefined') {
-				for (var player of msg.players) {
+				for (var player of msg.players) {		
+					
+					players.push(player.name);
+
 					if (game.global.myPlayer.id == player.id) {
 
 						game.global.myPlayer.image.x = player.posX
@@ -74,8 +79,7 @@ window.onload = function() {
 
 						game.global.myPlayer.name.setText(player.name)
 						game.global.myPlayer.name.x = player.posX
-						game.global.myPlayer.name.y = player.posY - 50		
-
+						game.global.myPlayer.name.y = player.posY - 50	
 
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {
@@ -115,6 +119,10 @@ window.onload = function() {
 							game.global.otherPlayers[player.id].name.y = player.posY - 50	
 						}
 					}
+				}
+				
+				for(var player of players){
+					$('#players').val($('#players').val() + "\n" + player);
 				}
 				
 				for (var projectile of msg.projectiles) {
@@ -165,7 +173,7 @@ window.onload = function() {
 		}
 
 		$('#message').val('');
-
+		
 		$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
 
 		game.global.socket.send(JSON.stringify(msg));
