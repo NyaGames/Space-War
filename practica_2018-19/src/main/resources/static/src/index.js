@@ -63,16 +63,25 @@ window.onload = function() {
 						game.global.myPlayer.image.x = player.posX
 						game.global.myPlayer.image.y = player.posY
 						game.global.myPlayer.image.angle = player.facingAngle
+						game.global.myPlayer.hpBar.x = player.posX
+						game.global.myPlayer.hpBar.y = player.posY - 30
 					} else {
 						if (typeof game.global.otherPlayers[player.id] == 'undefined') {
 							game.global.otherPlayers[player.id] = {
-									image : game.add.sprite(player.posX, player.posY, 'spacewar', player.shipType)
+									image : game.add.sprite(player.posX, player.posY, 'spacewar', player.shipType),
+									hpBar : game.add.sprite(0, 0, 'hpBar')
 							}
 							game.global.otherPlayers[player.id].image.anchor.setTo(0.5, 0.5)
+							game.global.otherPlayers[player.id].hpBar.anchor.setTo(0.5, 0.5)
+							game.global.otherPlayers[player.id].hpBar.width = 75
+							game.global.otherPlayers[player.id].hpBar.height = 10
 						} else {
 							game.global.otherPlayers[player.id].image.x = player.posX
 							game.global.otherPlayers[player.id].image.y = player.posY
 							game.global.otherPlayers[player.id].image.angle = player.facingAngle
+							game.global.otherPlayers[player.id].hpBar.x = player.posX
+							game.global.otherPlayers[player.id].hpBar.y = player.posY - 30
+							
 						}
 					}
 				}

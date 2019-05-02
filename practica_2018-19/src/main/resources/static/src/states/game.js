@@ -40,6 +40,10 @@ Spacewar.gameState.prototype = {
 		game.global.myPlayer.image = game.add.sprite(0, 0, 'spacewar',
 				game.global.myPlayer.shipType)
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
+		game.global.myPlayer.hpBar = game.add.sprite(0, 0, 'hpBar');
+		game.global.myPlayer.hpBar.anchor.set(0.5);
+		game.global.myPlayer.hpBar.width = 75;
+		game.global.myPlayer.hpBar.height = 10;
 	},
 
 	create : function() {

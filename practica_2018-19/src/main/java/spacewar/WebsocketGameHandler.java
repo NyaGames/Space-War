@@ -67,8 +67,7 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 					if(!participant.getSession().getId().equals(session.getId())) {
 						participant.getSession().sendMessage(message);
 					}
-				}			
-				
+				}		
 				break;
 			default:
 				break;

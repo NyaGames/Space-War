@@ -1,3 +1,4 @@
+
 package spacewar;
 
 public class SpaceObject {
