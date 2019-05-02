@@ -20,22 +20,10 @@ Spacewar.menuState.prototype = {
 	},
 
 	create : function() {
-		this.showHTML();
+		game.state.start('lobbyState')
 	},
 
 	update : function() {		
-		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-		if (typeof game.global.myPlayer.id !== 'undefined' && this.spaceKey.isDown) {
-			let message = {
-				event : 'JOIN',
-				username : document.getElementById("user").value
-			}
-			game.global.socket.send(JSON.stringify(message))
-			game.state.start('lobbyState')
-		}
-	},
-	showHTML() {
-		var x = document.getElementById("user");
-		x.style.display = "block";
-	}	
+	
+	},	
 }

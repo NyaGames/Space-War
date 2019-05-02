@@ -22,26 +22,70 @@
 	#user{
 		position: absolute;
 		z-index: 1000;
-		width: 10%;
+		width: 20%;
 		padding: 12px 20px;
-		margin: 450px 200px;
+		margin: 250px 360px;
 		display: inline-block;
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		box-sizing: border-box;
-		font-size: 200%;
+		font-size: 150%;
+	}
+
+	input[id="loginButton"] {
+		position: absolute;
+		z-index: 1000;
+		margin: 350px 422px;
+		width: 10%;
+		padding: 12px 20px;
+		display: inline-block;
+		border: 3px solid rgb(202, 148, 98);
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 100%;
+	}
+
+	input[id="createRoom"] {
+		position: absolute;
+		z-index: 1000;
+		margin: 250px 422px;
+		width: 10%;
+		padding: 12px 20px;
+		display: inline-block;
+		border: 3px solid rgb(202, 148, 98);
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 100%;
+	}
+
+	input[id="joinRoom"] {
+		position: absolute;
+		z-index: 1000;
+		margin: 350px 422px;
+		width: 10%;
+		padding: 12px 20px;
+		display: inline-block;
+		border: 3px solid rgb(202, 148, 98);
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 100%;
 	}
 </style>
 </head>
 
 <body>
 	<!-- div donde ubicaremos el juego -->	
-	<input type="text" id="user">
+	<input type="text" id="user" placeholder="Insert username">
+	<input id="loginButton" type="button" onclick="Spacewar.lobbyState.prototype.login()" value="Login">
+	<input id="createRoom" type="button" onclick="Spacewar.matchmakingState.prototype.createRoom()" value="Create Room">
+	<input id="joinRoom" type="button" onclick="Spacewar.matchmakingState.prototype.joinRoom()" value="Join Room">
 	<div id="gameDiv"></div>
 	<div class="panel">
 		<span>Message: </span><input type = "text" id = "message" placeholder="Message" maxlength="80" style="width: 60%">
 		<button id="send-btn">Send</button>
 		<textarea id="chat" rows="20" cols=""></textarea>
 	</div>
+
+	
 </body>
 </html>

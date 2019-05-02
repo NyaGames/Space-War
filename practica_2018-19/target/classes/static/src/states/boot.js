@@ -26,8 +26,11 @@ Spacewar.bootState.prototype = {
 			game.state.start('preloadState')
 		}
 	},
+
 	hideHTML() {
-        var x = document.getElementById("user");
-        x.style.display = "none";
+		document.getElementById("user").style.display = "none";
+		document.getElementById("loginButton").style.display = "none";
+		document.getElementById("createRoom").style.display = "none";
+		document.getElementById("joinRoom").style.display = "none";
 	}
 }

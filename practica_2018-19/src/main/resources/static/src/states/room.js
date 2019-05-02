@@ -1,5 +1,5 @@
 Spacewar.roomState = function(game) {
-
+	
 }
 
 Spacewar.roomState.prototype = {
@@ -11,7 +11,10 @@ Spacewar.roomState.prototype = {
 	},
 
 	preload : function() {
-
+		let message = {
+			event : 'JOIN ROOM'
+		}
+		game.global.socket.send(JSON.stringify(message))
 	},
 
 	create : function() {
