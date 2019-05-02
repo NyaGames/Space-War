@@ -106,22 +106,7 @@ public class SpacewarGame {
 		Set<Integer> bullets2Remove = new HashSet<>();
 		boolean removeBullets = false;
 
-		try {
-			// Update players
-			for (Player player : getPlayers()) {
-				player.calculateMovement();
-
-				ObjectNode jsonPlayer = mapper.createObjectNode();
-				jsonPlayer.put("id", player.getPlayerId());
-				jsonPlayer.put("name", player.getName());
-				jsonPlayer.put("hp", player.getHp());
-				jsonPlayer.put("shipType", player.getShipType());
-				jsonPlayer.put("posX", player.getPosX());
-				jsonPlayer.put("posY", player.getPosY());
-				jsonPlayer.put("facingAngle", player.getFacingAngle());
-				arrayNodePlayers.addPOJO(jsonPlayer);
-			}
-
+		try {	
 			// Update bullets and handle collision
 			for (Projectile projectile : getProjectiles()) {
 				projectile.applyVelocity2Position();
@@ -131,6 +116,7 @@ public class SpacewarGame {
 					if ((projectile.getOwner().getPlayerId() != player.getPlayerId()) && player.intersect(projectile)) {
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
+						player.hit(projectile.getDamage());
 						break;
 					}
 				}
@@ -158,6 +144,21 @@ public class SpacewarGame {
 
 			if (removeBullets)
 				this.projectiles.keySet().removeAll(bullets2Remove);
+			
+			// Update players
+			for (Player player : getPlayers()) {
+				player.calculateMovement();
+
+				ObjectNode jsonPlayer = mapper.createObjectNode();
+				jsonPlayer.put("id", player.getPlayerId());
+				jsonPlayer.put("name", player.getName());
+				jsonPlayer.put("hp", player.getHp());
+				jsonPlayer.put("shipType", player.getShipType());
+				jsonPlayer.put("posX", player.getPosX());
+				jsonPlayer.put("posY", player.getPosY());
+				jsonPlayer.put("facingAngle", player.getFacingAngle());
+				arrayNodePlayers.addPOJO(jsonPlayer);
+			}
 
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);

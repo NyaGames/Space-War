@@ -9,6 +9,8 @@ public class Projectile extends SpaceObject {
 	private final Player owner;
 	private final long firingInstant;
 	private final int id;
+	
+	private int damage = 15;
 
 	private boolean isHit = false;
 
@@ -18,6 +20,14 @@ public class Projectile extends SpaceObject {
 		this.firingInstant = System.currentTimeMillis();
 		this.initProjectile();
 		this.id = id % 800; // 800 = maxNumProjectiles
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public void setDamage(int damage) {
+		this.damage = damage;
 	}
 
 	public Player getOwner() {

@@ -33,7 +33,7 @@ public class Player extends Spaceship {
 		return hp;
 	}
 
-	public void hitPlayer(int hitDamage) {
+	public void hit(int hitDamage) {
 		hp -= hitDamage;
 	}
 
