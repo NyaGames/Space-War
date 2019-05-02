@@ -15,10 +15,16 @@ Spacewar.lobbyState.prototype = {
 	},
 
 	create : function() {
+		this.hideHTML();
 		game.state.start('matchmakingState')
 	},
 
 	update : function() {
 
+	},
+	
+	hideHTML() {
+        var x = document.getElementById("user");
+        x.style.display = "none";
 	}
 }

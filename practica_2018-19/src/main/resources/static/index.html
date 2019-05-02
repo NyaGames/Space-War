@@ -18,13 +18,27 @@
 <script src="src/states/room.js"></script>
 <script src="src/states/game.js"></script>
 <script src="src/index.js"></script>
+<style>
+	#user{
+		position: absolute;
+		z-index: 1000;
+		width: 10%;
+		padding: 12px 20px;
+		margin: 450px 200px;
+		display: inline-block;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 200%;
+	}
+</style>
 </head>
 
 <body>
-	<!-- div donde ubicaremos el juego -->
+	<!-- div donde ubicaremos el juego -->	
+	<input type="text" id="user">
 	<div id="gameDiv"></div>
 	<div class="panel">
-		<span>Name: </span><input type = "text" id = "name" placeholder="Name">
 		<span>Message: </span><input type = "text" id = "message" placeholder="Message" maxlength="80" style="width: 60%">
 		<button id="send-btn">Send</button>
 		<textarea id="chat" rows="20" cols=""></textarea>

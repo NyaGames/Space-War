@@ -18,12 +18,16 @@ Spacewar.bootState.prototype = {
 	},
 
 	create : function() {
-
+		this.hideHTML();
 	},
 
 	update : function() {
 		if (typeof game.global.socket !== 'undefined') {
 			game.state.start('preloadState')
 		}
+	},
+	hideHTML() {
+        var x = document.getElementById("user");
+        x.style.display = "none";
 	}
 }

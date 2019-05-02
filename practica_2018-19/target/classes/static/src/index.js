@@ -72,6 +72,7 @@ window.onload = function() {
 						game.global.myPlayer.hpBar.y = player.posY - 30
 						game.global.myPlayer.hpBar.width = Math.max(0, 75 * player.hp * 0.01)
 
+						game.global.myPlayer.name.setText(player.name)
 						game.global.myPlayer.name.x = player.posX
 						game.global.myPlayer.name.y = player.posY - 50		
 
@@ -109,6 +110,7 @@ window.onload = function() {
 							game.global.otherPlayers[player.id].hpBar.y = player.posY - 30	
 							game.global.otherPlayers[player.id].hpBar.width = Math.max(0, 75 * player.hp * 0.01)
 							
+							game.global.otherPlayers[player.id].name.setText(player.name)
 							game.global.otherPlayers[player.id].name.x = player.posX							
 							game.global.otherPlayers[player.id].name.y = player.posY - 50	
 						}
@@ -158,7 +160,7 @@ window.onload = function() {
 	$("#send-btn").click(() => {
 		var msg = {
 			event: "CHAT",
-			name: $('#name').val(),
+			name: game.global.myPlayer.name.text,
 			message: $('#message').val()
 		}
 

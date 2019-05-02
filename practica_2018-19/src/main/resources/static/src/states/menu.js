@@ -16,20 +16,26 @@ Spacewar.menuState.prototype = {
 			if (game.global.DEBUG_MODE) {
 				console.log("[DEBUG] Forcing joining server...");
 			}
-			let message = {
-				event : 'JOIN'
-			}
-			game.global.socket.send(JSON.stringify(message))
 		}
 	},
 
 	create : function() {
-
+		this.showHTML();
 	},
 
-	update : function() {
-		if (typeof game.global.myPlayer.id !== 'undefined') {
+	update : function() {		
+		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		if (typeof game.global.myPlayer.id !== 'undefined' && this.spaceKey.isDown) {
+			let message = {
+				event : 'JOIN',
+				username : document.getElementById("user").value
+			}
+			game.global.socket.send(JSON.stringify(message))
 			game.state.start('lobbyState')
 		}
-	}
+	},
+	showHTML() {
+		var x = document.getElementById("user");
+		x.style.display = "block";
+	}	
 }
