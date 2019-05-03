@@ -27,7 +27,7 @@ Spacewar.matchmakingState.prototype = {
 
 	create : function() {
 		this.showHTML();
-		let nameText = game.add.text(10, game.world.height - 80, "Hello " + game.global.myPlayer.username + " :)", { font: "Arial 50px", fill: "#fff", align: "center"})
+		let nameText = game.add.text(10, game.world.height - 50, "Hello " + game.global.myPlayer.username + " :)", { font: "20px", fill: "#fff", align: "center"})
 	},
 
 	createRoom : function(){

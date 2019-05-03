@@ -11,14 +11,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public class WebsocketGameHandler extends TextWebSocketHandler {
+import java.util.concurrent.ConcurrentHashMap;
 
-	private SpacewarGame game = SpacewarGame.INSTANCE;
+public class WebSocketHandler extends TextWebSocketHandler{
+
+	private ConcurrentHashMap<String, Room> rooms = new ConcurrentHashMap<>();
+	
 	private static final String PLAYER_ATTRIBUTE = "PLAYER";
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
-	private AtomicInteger projectileId = new AtomicInteger(0);
-
+	private AtomicInteger projectileId = new AtomicInteger(0);	
+	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		Player player = new Player(playerId.incrementAndGet(), session);
@@ -28,11 +31,9 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 		msg.put("event", "JOIN");
 		msg.put("id", player.getPlayerId());
 		msg.put("shipType", player.getShipType());
-		player.getSession().sendMessage(new TextMessage(msg.toString()));
-		
-		game.addPlayer(player);
+		player.getSession().sendMessage(new TextMessage(msg.toString()));		
 	}
-
+	
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		try {
@@ -49,10 +50,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 				msg.put("username", player.getName());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
+			case "NEW ROOM":
+				CreateRoom(node.get("name").asText(), node.get("mode").asInt());
+				break;
 			case "JOIN ROOM":
-				msg.put("event", "NEW ROOM");
-				msg.put("room", "GLOBAL");
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				joinRoom(player, node.get("name").asText());
 				break;
 			case "UPDATE MOVEMENT":
 				player.loadMovement(node.path("movement").get("thrust").asBoolean(),
@@ -61,11 +63,11 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 						node.path("movement").get("rotRight").asBoolean());
 				if (node.path("bullet").asBoolean()) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					game.addProjectile(projectile.getId(), projectile);
+					player.getRoom().getGame().addProjectile(projectile.getId(), projectile);
 				}
 				break;
 			case "CHAT":			
-				for(Player participant : game.getPlayers()) {
+				for(Player participant : player.getRoom().getGame().getPlayers()) {
 					if(!participant.getSession().getId().equals(session.getId())) {
 						participant.getSession().sendMessage(message);
 					}
@@ -83,12 +85,30 @@ public class WebsocketGameHandler extends TextWebSocketHandler {
 
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
-		game.removePlayer(player);
+		player.getRoom().getGame().removePlayer(player);
 
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "REMOVE PLAYER");
 		msg.put("id", player.getPlayerId());
-		game.broadcast(msg.toString());
+		player.getRoom().getGame().broadcast(msg.toString());
+	}
+
+	
+	public Room GetRoom(String roomName) {
+		return rooms.get(roomName);
+	}
+	
+	public boolean CreateRoom(String roomName, int mode) {
+		if(rooms.contains(roomName)) return false;
+		
+		Room room = new Room(roomName, mode);
+		rooms.put(roomName, room);
+		return true;
+	}
+	
+	public void joinRoom(Player player, String roomName) {
+		rooms.get(roomName).joinPlayer(player);
 	}
 }

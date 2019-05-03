@@ -42,9 +42,7 @@ public class SpacewarGame {
 		players.put(player.getSession().getId(), player);
 
 		int count = numPlayers.getAndIncrement();
-		if (count == 0) {
-			this.startGameLoop();
-		}
+		
 		chatHandler.updateChat(players);
 	}
 
@@ -61,10 +59,15 @@ public class SpacewarGame {
 		}
 		chatHandler.updateChat(players);
 	}
+	
+	public AtomicInteger getNumPlayer() {
+		return numPlayers;
+	}
 
 	public void addProjectile(int id, Projectile projectile) {
 		projectiles.put(id, projectile);
 	}
+	
 
 	public Collection<Projectile> getProjectiles() {
 		return projectiles.values();
