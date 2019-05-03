@@ -195,6 +195,7 @@ window.onload = function() {
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
 	game.state.add('gameState', Spacewar.gameState)
+	game.state.add('createRoomState', Spacewar.createRoomState)
 
 	game.state.start('bootState')	
 }

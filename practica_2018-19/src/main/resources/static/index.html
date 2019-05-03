@@ -17,6 +17,7 @@
 <script src="src/states/matchmaking.js"></script>
 <script src="src/states/room.js"></script>
 <script src="src/states/game.js"></script>
+<script src="src/states/createRoom.js"></script>
 <script src="src/index.js"></script>
 <style>
 	#user{
@@ -70,15 +71,63 @@
 		box-sizing: border-box;
 		font-size: 100%;
 	}
+
+	#roomName{
+		position: absolute;
+		z-index: 1000;
+		width: 20%;
+		padding: 12px 20px;
+		margin: 250px 360px;
+		display: inline-block;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 150%;
+	}
+
+	select[id="gameMode"] {
+		position: absolute;
+		z-index: 1000;
+		margin: 320px 80px;
+		width: 10%;
+		padding: 12px 20px;
+		display: inline-block;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 100%;
+	}
+
+	input[id="createRoom2"] {
+		position: absolute;
+		z-index: 1000;
+		margin: 450px 422px;
+		width: 10%;
+		padding: 12px 20px;
+		display: inline-block;
+		border: 3px solid rgb(202, 148, 98);
+		border-radius: 4px;
+		box-sizing: border-box;
+		font-size: 100%;
+	}
 </style>
 </head>
 
 <body>
 	<!-- div donde ubicaremos el juego -->	
 	<input type="text" id="user" placeholder="Insert username">
-	<input id="loginButton" type="button" onclick="Spacewar.lobbyState.prototype.login()" value="Login">
+	<input id="loginButton" type="button" onclick="Spacewar.menuState.prototype.login()" value="Login">
 	<input id="createRoom" type="button" onclick="Spacewar.matchmakingState.prototype.createRoom()" value="Create Room">
 	<input id="joinRoom" type="button" onclick="Spacewar.matchmakingState.prototype.joinRoom()" value="Join Room">
+
+	<input type="text" id="roomName" placeholder="Insert Room name">
+	<select id="gameMode" name="gameMode">
+		<option value="">Game Mode</option>
+		<option value="1">PVP</option>
+		<option value="2">BATTLE ROYALE</option>	
+	</select>
+	<input id="createRoom2" type="button" onclick="Spacewar.createRoomState.prototype.createRoom()" value="Create Room">
+
 	<div id="gameDiv"></div>
 	<div class="panel">
 		<span>Message: </span><input type = "text" id = "message" placeholder="Message" maxlength="80" style="width: 60%">

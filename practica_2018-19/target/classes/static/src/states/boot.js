@@ -32,5 +32,8 @@ Spacewar.bootState.prototype = {
 		document.getElementById("loginButton").style.display = "none";
 		document.getElementById("createRoom").style.display = "none";
 		document.getElementById("joinRoom").style.display = "none";
+		document.getElementById("roomName").style.display = "none";
+		document.getElementById("gameMode").style.display = "none";
+		document.getElementById("createRoom2").style.display = "none";
 	}
 }

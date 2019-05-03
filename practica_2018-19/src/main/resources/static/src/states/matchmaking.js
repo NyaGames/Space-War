@@ -31,12 +31,13 @@ Spacewar.matchmakingState.prototype = {
 	},
 
 	createRoom : function(){
-		this.joinRoom()
+		this.hideHTML();
+		game.state.start('createRoomState')
 	},
 
 	joinRoom : function(){
-		game.state.start('roomState')
 		this.hideHTML();
+		game.state.start('lobbyState')	
 	},
 
 	update : function() {
