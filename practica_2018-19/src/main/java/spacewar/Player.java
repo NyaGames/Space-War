@@ -8,6 +8,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class Player extends Spaceship {
 
 	private final WebSocketSession session;
+	private Room room;
 	private final int playerId;
 	private final String shipType;
 	
@@ -92,5 +93,13 @@ public class Player extends Spaceship {
 		String ship = (randomShips[new Random().nextInt(randomShips.length)]);
 		ship += "_0" + (new Random().nextInt(5) + 1) + ".png";
 		return ship;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public void setRoom(Room room) {
+		this.room = room;
 	}
 }
