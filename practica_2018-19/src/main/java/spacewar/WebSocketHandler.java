@@ -123,6 +123,6 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	
 	public void joinRoom(Player player, String roomName) {
 		rooms.get(roomName).joinPlayer(player);
-		System.out.println(rooms.get(roomName).getGame().getPlayers());
+		System.out.println(rooms.get(roomName).players.keySet());
 	}
 }

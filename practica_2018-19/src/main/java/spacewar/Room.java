@@ -1,5 +1,7 @@
 package spacewar;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.web.socket.CloseStatus;
@@ -20,6 +22,7 @@ public class Room extends TextWebSocketHandler{
 	private String name;
 	private SpacewarGame game;
 	private GameMode mode;
+	public Map<String, Player> players = new ConcurrentHashMap<>();
 	private boolean gameStarted = false;	
 
 	
@@ -37,7 +40,7 @@ public class Room extends TextWebSocketHandler{
 	public void joinPlayer(Player player) {
 		if(gameStarted) return;
 		
-		game.addPlayer(player);
+		/*game.addPlayer(player);
 		switch(mode) {
 			case PVP:
 				if(game.getNumPlayer().equals(2)) {
@@ -49,7 +52,21 @@ public class Room extends TextWebSocketHandler{
 					startGame();
 				}
 				break;
-		}
+		}*/
+
+		players.put(player.getName(), player);
+		switch(mode) {
+		case PVP:
+			if(players.size() == 2) {
+				startGame();
+			}
+			break;
+		case BATTLEROYALE:
+			if(players.size() == 3) {
+				startGame();
+			}
+			break;
+	}
 	}
 	
 	public void startGame() {

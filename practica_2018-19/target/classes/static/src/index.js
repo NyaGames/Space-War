@@ -52,11 +52,10 @@ window.onload = function() {
 			}
 			break
 		case 'GET ROOMS' :
-			for(var key of msg.key){
-				var button = document.createElement("button")
-				button.class = "roomButton"
-				button.text = key
-			}
+			var botoncillo = document.createElement('input');
+			botoncillo.className = "roomButton";
+			//botoncillo.setAttribute("onclick", alert("Haciendo movidas"));
+			document.body.appendChild(botoncillo);
 			break
 		case 'GAME STATE UPDATE' :
 			if (game.global.DEBUG_MODE) {
@@ -200,6 +199,7 @@ window.onload = function() {
 	game.state.add('lobbyState', Spacewar.lobbyState)
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
+	game.state.add('preGameState', Spacewar.preGameState)
 	game.state.add('gameState', Spacewar.gameState)
 	game.state.add('createRoomState', Spacewar.createRoomState)
 

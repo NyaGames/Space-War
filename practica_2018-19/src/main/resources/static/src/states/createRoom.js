@@ -46,7 +46,7 @@ Spacewar.createRoomState.prototype = {
 
         this.hideHTML();
 
-        game.state.start('gameState')
+        game.state.start('preGameState')
     },
 
     showHTML(){
