@@ -57,6 +57,17 @@ window.onload = function() {
 			//botoncillo.setAttribute("onclick", alert("Haciendo movidas"));
 			document.body.appendChild(botoncillo);
 			break
+		case 'MATCHMAKING' :
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] Jugadores: '+msg.count)
+			}
+			if(msg.count == msg.necesidades && msg.count != -1){
+				game.state.start("gameState")
+			}
+			break
+		case 'JOIN RANDOM ROOM' :
+			game.state.start("preGameState")
+			break
 		case 'GAME STATE UPDATE' :
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] GAME STATE UPDATE message recieved')

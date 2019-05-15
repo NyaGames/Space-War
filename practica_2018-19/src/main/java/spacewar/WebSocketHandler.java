@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import spacewar.Room.GameMode;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WebSocketHandler extends TextWebSocketHandler{
@@ -62,11 +64,47 @@ public class WebSocketHandler extends TextWebSocketHandler{
 			case "JOIN ROOM":
 				joinRoom(player, node.get("name").asText());
 				break;
+			case "JOIN RANDOM ROOM":
+				msg.put("event", "JOIN RANDOM ROOM");
+				for(String s : rooms.keySet()) {
+					Room room = GetRoom(s);
+					if(!room.players.containsKey(player.getName())){
+						System.out.println(s);
+						if(room.mode == GameMode.PVP && room.players.size() < 2) {
+							msg.put("room", s);
+							joinRoom(player, s);
+							break;
+						}else if(room.mode == GameMode.BATTLEROYALE && room.players.size() < 3) {
+							msg.put("room", s);
+							joinRoom(player, s);
+							break;
+						}	
+					}
+				}
+				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				break;
 			case "GET ROOMS":
 				msg.put("event", "GET ROOMS");
 				for(String s : rooms.keySet()) {
 					msg.put("key", s);
 				}
+				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				break;
+			case "MATCHMAKING":
+				int count = -1;
+				int necesidades = -1;
+				for(String s : rooms.keySet()) {
+					Room room = GetRoom(s);
+					if(room.players.containsKey(player.getName())){
+						count = room.players.size();
+						if(room.mode == GameMode.PVP) necesidades = 2;
+						else if(room.mode == GameMode.PVP) necesidades = 3;
+						break;
+					}
+				}
+				msg.put("event", "MATCHMAKING");
+				msg.put("count", count);
+				msg.put("necesidades", necesidades);
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "UPDATE MOVEMENT":

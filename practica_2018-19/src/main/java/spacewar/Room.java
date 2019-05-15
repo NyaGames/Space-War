@@ -21,7 +21,7 @@ public class Room extends TextWebSocketHandler{
 
 	private String name;
 	private SpacewarGame game;
-	private GameMode mode;
+	public GameMode mode;
 	public Map<String, Player> players = new ConcurrentHashMap<>();
 	private boolean gameStarted = false;	
 

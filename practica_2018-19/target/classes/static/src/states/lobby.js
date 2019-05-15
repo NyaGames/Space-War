@@ -17,7 +17,7 @@ Spacewar.lobbyState.prototype = {
 	create : function() {
 		
 		let message = {
-	            event : 'GET ROOMS',
+	            event : 'JOIN RANDOM ROOM',
 	    }
 		
 	    game.global.socket.send(JSON.stringify(message))
