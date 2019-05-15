@@ -37,6 +37,7 @@ Spacewar.matchmakingState.prototype = {
 
 	joinRoom : function(){
 		this.hideHTML();
+	    
 		game.state.start('lobbyState')	
 	},
 

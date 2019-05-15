@@ -14,11 +14,16 @@ Spacewar.lobbyState.prototype = {
 	
 	},
 
-	create : function() {		
-	
+	create : function() {
+		
+		let message = {
+	            event : 'GET ROOMS',
+	    }
+		
+	    game.global.socket.send(JSON.stringify(message))
 	},
 
 	update : function() {	
-		game.state.start('gameState')
+		
 	}	
 }

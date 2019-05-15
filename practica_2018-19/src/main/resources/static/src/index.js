@@ -5,7 +5,7 @@ window.onload = function() {
 	// GLOBAL VARIABLES
 	game.global = {
 		FPS : 30,
-		DEBUG_MODE : false,
+		DEBUG_MODE : true,
 		socket : null,
 		myPlayer : new Object(),
 		otherPlayers : [],
@@ -51,7 +51,13 @@ window.onload = function() {
 					name : msg.room
 			}
 			break
-		
+		case 'GET ROOMS' :
+			for(var key of msg.key){
+				var button = document.createElement("button")
+				button.class = "roomButton"
+				button.text = key
+			}
+			break
 		case 'GAME STATE UPDATE' :
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] GAME STATE UPDATE message recieved')

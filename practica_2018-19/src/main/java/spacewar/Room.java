@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class Room extends TextWebSocketHandler{
 	
 	public enum GameMode{
-		PVP, BATTLEROYALE
+		NONE, PVP, BATTLEROYALE
 	}
 
 	private String name;

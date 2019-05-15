@@ -36,17 +36,17 @@ Spacewar.createRoomState.prototype = {
 
         if(mode === "") mode = 1;
 
-        /*let message = {
+        let message = {
             event : 'NEW ROOM',
             name : name,
             mode : mode
         }
 
-        game.global.socket.send(JSON.stringify(message))*/
+        game.global.socket.send(JSON.stringify(message))
 
         this.hideHTML();
 
-        game.state.start('lobbyState')
+        game.state.start('gameState')
     },
 
     showHTML(){

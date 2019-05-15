@@ -51,10 +51,23 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "NEW ROOM":
+				System.out.println("Nueva sala: "+node.get("name").asText());
+				if(rooms.containsKey(node.get("name").asText())) {
+					System.out.println(("Error"));
+				}
 				CreateRoom(node.get("name").asText(), node.get("mode").asInt());
+				joinRoom(player, node.get("name").asText());
+				System.out.println(rooms.keySet());
 				break;
 			case "JOIN ROOM":
 				joinRoom(player, node.get("name").asText());
+				break;
+			case "GET ROOMS":
+				msg.put("event", "GET ROOMS");
+				for(String s : rooms.keySet()) {
+					msg.put("key", s);
+				}
+				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "UPDATE MOVEMENT":
 				player.loadMovement(node.path("movement").get("thrust").asBoolean(),
@@ -110,5 +123,6 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	
 	public void joinRoom(Player player, String roomName) {
 		rooms.get(roomName).joinPlayer(player);
+		System.out.println(rooms.get(roomName).getGame().getPlayers());
 	}
 }
