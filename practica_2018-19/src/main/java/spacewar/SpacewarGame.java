@@ -168,7 +168,7 @@ public class SpacewarGame {
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);
-
+			System.out.println("Enviando cosas de moverse");
 			this.broadcast(json.toString());
 		} catch (Throwable ex) {
 

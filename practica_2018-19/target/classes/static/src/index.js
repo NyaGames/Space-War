@@ -68,6 +68,9 @@ window.onload = function() {
 		case 'JOIN RANDOM ROOM' :
 			game.state.start("preGameState")
 			break
+		case 'START GAME' :
+			
+			break
 		case 'GAME STATE UPDATE' :
 			if (game.global.DEBUG_MODE) {
 				console.log('[DEBUG] GAME STATE UPDATE message recieved')

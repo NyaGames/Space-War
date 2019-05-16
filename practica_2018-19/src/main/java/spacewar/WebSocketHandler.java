@@ -114,15 +114,21 @@ public class WebSocketHandler extends TextWebSocketHandler{
 						node.path("movement").get("rotRight").asBoolean());
 				if (node.path("bullet").asBoolean()) {
 					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					player.getRoom().getGame().addProjectile(projectile.getId(), projectile);
+					//player.getRoom().getGame().addProjectile(projectile.getId(), projectile);
+					player.getRoom().addProjectile(projectile.getId(), projectile);
 				}
 				break;
 			case "CHAT":			
-				for(Player participant : player.getRoom().getGame().getPlayers()) {
+				/*for(Player participant : player.getRoom().getGame().getPlayers()) {
 					if(!participant.getSession().getId().equals(session.getId())) {
 						participant.getSession().sendMessage(message);
 					}
-				}		
+				}*/	
+				for(Player participant : player.getRoom().getPlayers()) {
+					if(!participant.getSession().getId().equals(session.getId())) {
+						participant.getSession().sendMessage(message);
+					}
+				}
 				break;
 			default:
 				break;
@@ -138,12 +144,14 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
-		player.getRoom().getGame().removePlayer(player);
-
+		//player.getRoom().getGame().removePlayer(player);
+		player.getRoom().removePlayer(player);
+		
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "REMOVE PLAYER");
 		msg.put("id", player.getPlayerId());
-		player.getRoom().getGame().broadcast(msg.toString());
+		//player.getRoom().getGame().broadcast(msg.toString());;
+		player.getRoom().broadcast(msg.toString());
 	}
 
 	
