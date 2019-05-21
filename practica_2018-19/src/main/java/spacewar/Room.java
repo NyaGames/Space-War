@@ -55,6 +55,7 @@ public class Room extends TextWebSocketHandler{
 		}*/
 
 		players.put(player.getName(), player);
+		addPlayer(player);
 		switch(mode) {
 			case PVP:
 				if(players.size() == 2) {
@@ -104,7 +105,7 @@ public class Room extends TextWebSocketHandler{
 	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
-		int count = numPlayers.getAndIncrement();
+		numPlayers.getAndIncrement();
 		
 		chatHandler.updateChat(players);
 	}
@@ -121,6 +122,7 @@ public class Room extends TextWebSocketHandler{
 		int count = this.numPlayers.decrementAndGet();
 		//solo puede quedar uno en el battle royale de las naves
 		if (count == 1) {
+			System.out.println("IS ALREADY DEAD");
 			this.stopGameLoop();
 		}
 		chatHandler.updateChat(players);
