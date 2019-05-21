@@ -184,9 +184,13 @@ window.onload = function() {
 				delete game.global.myPlayer
 				break;
 			}else{
-				game.global.otherPlayers[msg.dead_id-1].image.destroy()
-				delete game.global.otherPlayers[msg.dead_id-1]
-				break;
+				for(var player of game.global.otherPlayers){
+					if(player.id == msg.dead_id){
+						player.image.destroy()
+						delete player
+						break;
+					}
+				}
 			}
 
 		case 'CHAT':			
