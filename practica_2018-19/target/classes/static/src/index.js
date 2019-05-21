@@ -180,9 +180,19 @@ window.onload = function() {
 				console.log('[DEBUG] REMOVE PLAYER message recieved')
 				console.dir(msg.players)
 			}
-			game.global.otherPlayers[msg.id].image.destroy()
-			delete game.global.otherPlayers[msg.id]
-			break;
+			if (game.global.myPlayer.id == msg.dead_id) {
+				game.global.myPlayer.image.destroy()
+				delete game.global.myPlayer
+				break;
+			}else{
+				for(var player of game.global.otherPlayers){
+					if(player.id == msg.dead_id){
+						player.image.destroy()
+						delete player
+						break;
+					}
+				}
+			}
 
 		case 'CHAT':			
 			$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
