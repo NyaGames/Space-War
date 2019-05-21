@@ -26,13 +26,13 @@ public class Room extends TextWebSocketHandler{
 		NONE, PVP, BATTLEROYALE
 	}
 
-	private String name;
+	public String NAME;
 	//private SpacewarGame game;
 	public GameMode mode;
 	private boolean gameStarted = false;	
 	
 	public Room(String name, int mode) {
-		this.name = name;
+		this.NAME = name;
 		this.mode = GameMode.values()[mode];
 		//game = SpacewarGame.INSTANCE;		
 	}	
@@ -70,10 +70,7 @@ public class Room extends TextWebSocketHandler{
 				break;
 		}
 	}
-	
-	public String getRoomName() {
-		return name;
-	}
+
 	
 	public String getModeName() {
 		return mode.toString();

@@ -56,6 +56,7 @@ window.onload = function() {
 				console.log('[DEBUG] GET ROOMS message recieved')
 				console.dir(msg)
 			}	
+			game.global.myPlayer.rooms = msg.avaibleRooms;			
 			break
 		case 'MATCHMAKING' :
 			if (game.global.DEBUG_MODE) {

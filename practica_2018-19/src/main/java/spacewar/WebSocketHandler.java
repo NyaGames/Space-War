@@ -9,10 +9,12 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import spacewar.Room.GameMode;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class WebSocketHandler extends TextWebSocketHandler{
@@ -83,13 +85,21 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				}
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;			
-			case "GET ROOMS":
-				msg.put("event", "GET ROOMS");
-				for(Room r : rooms.values()) {
-					msg.put("key", r.getRoomName());
-					msg.put("gameMode", r.getModeName());
-					msg.put("numPlayers", r.getNumPlayer());	
-				}
+			case "GET ROOMS":	
+				msg.put("event", "GET ROOMS");					
+				ArrayNode avaibleRooms = msg.putArray("avaibleRooms");
+				Collection<Room> allRooms = rooms.values();
+				for(Room room : allRooms) {
+					if(/*Mirar que la room tiene salas libres*/true) {
+						ObjectNode roomNode = mapper.createObjectNode();
+						roomNode.put("key", room.NAME);
+						roomNode.put("gameMode", room.getModeName());
+						roomNode.put("numPlayers", room.getNumPlayer());		
+						
+						avaibleRooms.add(roomNode);
+					}					
+				}							
+				System.out.println(msg.toString());
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "MATCHMAKING":
