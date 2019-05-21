@@ -115,13 +115,18 @@ public class Room extends TextWebSocketHandler{
 	}
 
 	public void removePlayer(Player player) {
+		ObjectNode json = mapper.createObjectNode();
 		players.remove(player.getSession().getId());
 
 		int count = this.numPlayers.decrementAndGet();
-		if (count == 0) {
+		//solo puede quedar uno en el battle royale de las naves
+		if (count == 1) {
 			this.stopGameLoop();
 		}
 		chatHandler.updateChat(players);
+		json.put("event", "REMOVE PLAYER");
+		json.put("dead_id", player.getPlayerId());
+		this.broadcast(json.toString());
 	}
 	
 	public int getNumPlayer() {
@@ -129,6 +134,7 @@ public class Room extends TextWebSocketHandler{
 	}
 
 	public void addProjectile(int id, Projectile projectile) {
+		System.out.println("projectil: "+id);
 		projectiles.put(id, projectile);
 	}
 	
@@ -183,6 +189,9 @@ public class Room extends TextWebSocketHandler{
 						// System.out.println("Player " + player.getPlayerId() + " was hit!!!");
 						projectile.setHit(true);
 						player.hit(projectile.getDamage());
+						if(player.getHp() <= 0) {
+							player.getRoom().removePlayer(player);
+						}
 						break;
 					}
 				}
@@ -231,7 +240,6 @@ public class Room extends TextWebSocketHandler{
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);
-			System.out.println("Enviando cosas de moverse");
 			this.broadcast(json.toString());
 		} catch (Throwable ex) {
 

@@ -59,10 +59,12 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				}
 				CreateRoom(node.get("name").asText(), node.get("mode").asInt());
 				joinRoom(player, node.get("name").asText());
+				player.setRoom(GetRoom(node.get("name").asText()));
 				System.out.println(rooms.keySet());
 				break;
 			case "JOIN ROOM":
 				joinRoom(player, node.get("name").asText());
+				//player.setRoom(room);
 				break;
 			case "JOIN RANDOM ROOM":
 				msg.put("event", "JOIN RANDOM ROOM");
@@ -73,10 +75,12 @@ public class WebSocketHandler extends TextWebSocketHandler{
 						if(room.mode == GameMode.PVP && room.players.size() < 2) {
 							msg.put("room", s);
 							joinRoom(player, s);
+							player.setRoom(room);
 							break;
 						}else if(room.mode == GameMode.BATTLEROYALE && room.players.size() < 3) {
 							msg.put("room", s);
 							joinRoom(player, s);
+							player.setRoom(room);
 							break;
 						}	
 					}
@@ -114,10 +118,15 @@ public class WebSocketHandler extends TextWebSocketHandler{
 						node.path("movement").get("brake").asBoolean(),
 						node.path("movement").get("rotLeft").asBoolean(),
 						node.path("movement").get("rotRight").asBoolean());
-				if (node.path("bullet").asBoolean()) {
-					Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
-					//player.getRoom().getGame().addProjectile(projectile.getId(), projectile);
-					player.getRoom().addProjectile(projectile.getId(), projectile);
+				if (node.get("bullet").asBoolean()) {
+					if(player.getAmmo() > 0 && player.getAmmo() <= player.getMaxAmmo()) {
+						Projectile projectile = new Projectile(player, this.projectileId.incrementAndGet());
+						//player.getRoom().getGame().addProjectile(projectile.getId(), projectile);					
+						player.getRoom().addProjectile(projectile.getId(), projectile);
+						player.setAmmo(player.getAmmo()-1);
+					}else {
+						player.setAmmo(player.getMaxAmmo());
+					}
 				}
 				break;
 			case "CHAT":			
@@ -161,12 +170,12 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		return rooms.get(roomName);
 	}
 	
-	public boolean CreateRoom(String roomName, int mode) {
-		if(rooms.contains(roomName)) return false;
+	public Room CreateRoom(String roomName, int mode) {
+		if(rooms.contains(roomName)) return null;
 		
 		Room room = new Room(roomName, mode);
 		rooms.put(roomName, room);
-		return true;
+		return room;
 	}
 	
 	public void joinRoom(Player player, String roomName) {

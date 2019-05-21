@@ -179,9 +179,15 @@ window.onload = function() {
 				console.log('[DEBUG] REMOVE PLAYER message recieved')
 				console.dir(msg.players)
 			}
-			game.global.otherPlayers[msg.id].image.destroy()
-			delete game.global.otherPlayers[msg.id]
-			break;
+			if (game.global.myPlayer.id == msg.dead_id) {
+				game.global.myPlayer.image.destroy()
+				delete game.global.myPlayer
+				break;
+			}else{
+				game.global.otherPlayers[msg.dead_id-1].image.destroy()
+				delete game.global.otherPlayers[msg.dead_id-1]
+				break;
+			}
 
 		case 'CHAT':			
 			$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
