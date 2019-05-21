@@ -82,11 +82,13 @@ public class WebSocketHandler extends TextWebSocketHandler{
 					}
 				}
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
-				break;
+				break;			
 			case "GET ROOMS":
 				msg.put("event", "GET ROOMS");
-				for(String s : rooms.keySet()) {
-					msg.put("key", s);
+				for(Room r : rooms.values()) {
+					msg.put("key", r.getRoomName());
+					msg.put("gameMode", r.getModeName());
+					msg.put("numPlayers", r.getNumPlayer());	
 				}
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;

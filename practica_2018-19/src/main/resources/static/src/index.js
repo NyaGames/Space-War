@@ -52,10 +52,10 @@ window.onload = function() {
 			}
 			break
 		case 'GET ROOMS' :
-			var botoncillo = document.createElement('input');
-			botoncillo.className = "roomButton";
-			//botoncillo.setAttribute("onclick", alert("Haciendo movidas"));
-			document.body.appendChild(botoncillo);
+			if (game.global.DEBUG_MODE) {
+				console.log('[DEBUG] GET ROOMS message recieved')
+				console.dir(msg)
+			}	
 			break
 		case 'MATCHMAKING' :
 			if (game.global.DEBUG_MODE) {

@@ -30,18 +30,12 @@ public class Room extends TextWebSocketHandler{
 	//private SpacewarGame game;
 	public GameMode mode;
 	private boolean gameStarted = false;	
-
 	
 	public Room(String name, int mode) {
 		this.name = name;
 		this.mode = GameMode.values()[mode];
 		//game = SpacewarGame.INSTANCE;		
-	}
-	
-	/*public SpacewarGame getGame() {
-		return game;
-	}*/
-	
+	}	
 	
 	public void joinPlayer(Player player) {
 		if(gameStarted) return;
@@ -62,19 +56,27 @@ public class Room extends TextWebSocketHandler{
 
 		players.put(player.getName(), player);
 		switch(mode) {
-		case PVP:
-			if(players.size() == 2) {
-				System.out.println("Let's jugar uno pa uno");
-				startGame();
-			}
-			break;
-		case BATTLEROYALE:
-			if(players.size() == 3) {
-				System.out.println("Let's jugar todos para todos");
-				startGame();
-			}
-			break;
+			case PVP:
+				if(players.size() == 2) {
+					System.out.println("Let's jugar uno pa uno");
+					startGame();
+				}
+				break;
+			case BATTLEROYALE:
+				if(players.size() == 3) {
+					System.out.println("Let's jugar todos para todos");
+					startGame();
+				}
+				break;
+		}
 	}
+	
+	public String getRoomName() {
+		return name;
+	}
+	
+	public String getModeName() {
+		return mode.toString();
 	}
 	
 	public void startGame() {
@@ -97,7 +99,7 @@ public class Room extends TextWebSocketHandler{
 	// GLOBAL GAME ROOM
 	public Map<String, Player> players = new ConcurrentHashMap<>();
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
-	private AtomicInteger numPlayers = new AtomicInteger();
+	private AtomicInteger numPlayers = new AtomicInteger(0);
 	private ChatHandler chatHandler = new ChatHandler(players);
 	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
@@ -106,6 +108,7 @@ public class Room extends TextWebSocketHandler{
 		
 		chatHandler.updateChat(players);
 	}
+
 
 	public Collection<Player> getPlayers() {
 		return players.values();
@@ -121,15 +124,14 @@ public class Room extends TextWebSocketHandler{
 		chatHandler.updateChat(players);
 	}
 	
-	public AtomicInteger getNumPlayer() {
-		return numPlayers;
+	public int getNumPlayer() {
+		return numPlayers.get();
 	}
 
 	public void addProjectile(int id, Projectile projectile) {
 		projectiles.put(id, projectile);
 	}
 	
-
 	public Collection<Projectile> getProjectiles() {
 		return projectiles.values();
 	}

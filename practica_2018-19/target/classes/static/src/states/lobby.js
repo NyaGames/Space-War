@@ -15,7 +15,8 @@ Spacewar.lobbyState.prototype = {
 	},
 
 	create : function() {
-		
+		rooms = []
+
 		let message = {
 	            event : 'JOIN RANDOM ROOM',
 	    }
