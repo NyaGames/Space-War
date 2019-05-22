@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import spacewar.Room.GameMode;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -35,7 +36,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		msg.put("event", "JOIN");
 		msg.put("id", player.getPlayerId());
 		msg.put("shipType", player.getShipType());
-		player.getSession().sendMessage(new TextMessage(msg.toString()));		
+		player.getSession().sendMessage(new TextMessage(msg.toString()));
 	}
 	
 	@Override
@@ -46,27 +47,44 @@ public class WebSocketHandler extends TextWebSocketHandler{
 			Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 
 			switch (node.get("event").asText()) {
-			case "JOIN":
+			case "JOIN":					
 				msg.put("event", "JOIN");
 				msg.put("id", player.getPlayerId());
-				msg.put("shipType", player.getShipType());
-				player.setName(node.get("username").asText());
-				msg.put("username", player.getName());
+				msg.put("shipType", player.getShipType());	
+				
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "NEW ROOM":
 				System.out.println("Nueva sala: "+node.get("name").asText());
+				
 				if(rooms.containsKey(node.get("name").asText())) {
 					System.out.println(("Error"));
 				}
+				
+				//Crea la sala y añade al jugador
 				CreateRoom(node.get("name").asText(), node.get("mode").asInt());
 				joinRoom(player, node.get("name").asText());
+				
+				//Asigna la sala al jugador
 				player.setRoom(GetRoom(node.get("name").asText()));
+				
 				System.out.println(rooms.keySet());
+				
+				sendRooms(player);
+				break;
+			case "LOGIN":
+				msg.put("event", "LOGIN");
+				player.setName(node.get("username").asText());
+				msg.put("username", player.getName());		
+				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "JOIN ROOM":
-				joinRoom(player, node.get("name").asText());
-				//player.setRoom(room);
+				joinRoom(player, node.get("roomName").asText());
+				msg.put("event", "JOIN ROOM");
+				msg.put("room", node.get("roomName").asText());
+				
+				player.setRoom(rooms.get(node.get("roomName").toString()));
+				player.getSession().sendMessage(new TextMessage(msg.toString()));				
 				break;
 			case "JOIN RANDOM ROOM":
 				msg.put("event", "JOIN RANDOM ROOM");
@@ -90,38 +108,11 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;			
 			case "GET ROOMS":	
-				msg.put("event", "GET ROOMS");					
-				ArrayNode avaibleRooms = msg.putArray("avaibleRooms");
-				Collection<Room> allRooms = rooms.values();
-				for(Room room : allRooms) {
-					if(/*Mirar que la room tiene salas libres*/true) {
-						ObjectNode roomNode = mapper.createObjectNode();
-						roomNode.put("key", room.NAME);
-						roomNode.put("gameMode", room.getModeName());
-						roomNode.put("numPlayers", room.getNumPlayer());		
-						
-						avaibleRooms.add(roomNode);
-					}					
-				}							
-				System.out.println(msg.toString());
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				sendRooms(player);				
 				break;
-			case "MATCHMAKING":
-				int count = -1;
-				int necesidades = -1;
-				for(String s : rooms.keySet()) {
-					Room room = GetRoom(s);
-					if(room.players.containsKey(player.getName())){
-						count = room.players.size();
-						if(room.mode == GameMode.PVP) necesidades = 2;
-						else if(room.mode == GameMode.PVP) necesidades = 3;
-						break;
-					}
-				}
-				msg.put("event", "MATCHMAKING");
-				msg.put("count", count);
-				msg.put("necesidades", necesidades);
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+			case "MATCHMAKING":				
+				Room r = player.getRoom();
+				r.tryToStart();				
 				break;
 			case "UPDATE MOVEMENT":
 				player.loadMovement(node.path("movement").get("thrust").asBoolean(),
@@ -139,12 +130,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 					}
 				}
 				break;
-			case "CHAT":			
-				/*for(Player participant : player.getRoom().getGame().getPlayers()) {
-					if(!participant.getSession().getId().equals(session.getId())) {
-						participant.getSession().sendMessage(message);
-					}
-				}*/	
+			case "CHAT":		
 				for(Player participant : player.getRoom().getPlayers()) {
 					if(!participant.getSession().getId().equals(session.getId())) {
 						participant.getSession().sendMessage(message);
@@ -186,6 +172,25 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		Room room = new Room(roomName, mode);
 		rooms.put(roomName, room);
 		return room;
+	}
+	
+	public void sendRooms(Player player) throws IOException {
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "GET ROOMS");					
+		ArrayNode avaibleRooms = msg.putArray("avaibleRooms");
+		Collection<Room> allRooms = rooms.values();
+		for(Room room : allRooms) {
+			if(/*Mirar que la room tiene salas libres*/true) {
+				ObjectNode roomNode = mapper.createObjectNode();
+				roomNode.put("key", room.NAME);
+				roomNode.put("gameMode", room.getModeName());
+				roomNode.put("numPlayers", room.getNumPlayer());		
+				
+				avaibleRooms.add(roomNode);
+			}					
+		}							
+		System.out.println(msg.toString());
+		player.getSession().sendMessage(new TextMessage(msg.toString()));
 	}
 	
 	public void joinRoom(Player player, String roomName) {

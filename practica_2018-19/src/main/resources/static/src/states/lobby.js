@@ -1,36 +1,79 @@
-Spacewar.lobbyState = function(game) {
+Spacewar.lobbyState = function (game) {
 
 }
 
 Spacewar.lobbyState.prototype = {
 
-	init : function() {
+	init: function () {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Entering **LOBBY** state");
 		}
 	},
 
-	preload : function() {
-	
+	preload: function () {
+		game.load.image('buttonSprite', 'assets/images/button.png');
 	},
 
-	create : function() {
+	create: function () {
 		let message = {
-	            event : 'GET ROOMS',
-	    }
-		
-		game.global.socket.send(JSON.stringify(message))			
+			event: 'GET ROOMS',
+		}
+
+		game.global.socket.send(JSON.stringify(message))
+
+		this.nameText = game.add.text(10, 50, "No rooms avaible", { font: "20px", fill: "#fff", align: "center" })
 	},
 
-	update : function() {	
+	update: function () {		
+
 		this.rooms = game.global.myPlayer.rooms;
 
-		if(this.rooms != undefined){
-			for(let i = 0; i < this.rooms.length; i++){
-				game.add.text(20, 20 + i * 50, this.rooms[i].key, { font: "20px", fill: "#fff", align: "center"});
-				game.add.text(220, 20 + i * 50, this.rooms[i].gameMode, { font: "20px", fill: "#fff", align: "center"});
-				game.add.text(420, 20 + i * 50, this.rooms[i].numPlayers + "/2", { font: "20px", fill: "#fff", align: "center"});
-			}				
-		}	
+		if (this.rooms != undefined && this.rooms.length != 0) {	
+			this.nameText.setText("")	
+			for (let i = 0; i < this.rooms.length; i++) {
+				game.add.text(20, 20 + i * 50, this.rooms[i].key, { font: "20px", fill: "#fff", align: "center" });
+				game.add.text(220, 20 + i * 50, this.rooms[i].gameMode, { font: "20px", fill: "#fff", align: "center" });
+				game.add.text(420, 20 + i * 50, this.rooms[i].numPlayers + "/2", { font: "20px", fill: "#fff", align: "center" });
+
+				let button = game.add.button(620, 20 + i * 50, 'buttonSprite', pressButton, this, 2, 1, 0)
+				button.width = 100;
+				button.height = 30;
+				button.anchor.setTo(0.5);
+				button.room = this.rooms[i].key;
+
+				button.onInputOver.add(overButton, this);
+				button.onInputOut.add(outButton, this);
+				button.onInputUp.add(upButton, this);				
+			
+			}
+		}else{
+			this.nameText.setText("No rooms avaible")
+		}
 	}
+}
+
+function overButton(e) {
+	//e.tint = 0xc0c0c0
+	e.tint = 0xD4AF37
+}
+
+function upButton(e) {
+	if (game.global.DEBUG_MODE) {
+		console.log("[DEBUG] JOINING **e.room** ROOM");
+	}
+
+	let message = {
+		event: 'JOIN ROOM',
+		roomName: e.room
+	}
+
+	game.global.socket.send(JSON.stringify(message))
+}
+
+function outButton(e) {
+	e.tint = 0xffffff
+}
+
+function pressButton(e) {
+	e.tint = 0x00000;	
 }

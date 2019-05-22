@@ -1,16 +1,16 @@
-Spacewar.menuState = function(game) {
+Spacewar.menuState = function (game) {
 	this.numStars = 100
 }
 
 Spacewar.menuState.prototype = {
 
-	init : function() {
+	init: function () {
 		if (game.global.DEBUG_MODE) {
 			console.log("[DEBUG] Entering **MENU** state");
 		}
 	},
 
-	preload : function() {
+	preload: function () {
 		// In case JOIN message from server failed, we force it
 		if (typeof game.global.myPlayer.id == 'undefined') {
 			if (game.global.DEBUG_MODE) {
@@ -21,26 +21,26 @@ Spacewar.menuState.prototype = {
 		// We create a procedural starfield background
 		for (var i = 0; i < this.numStars; i++) {
 			let sprite = game.add.sprite(game.world.randomX,
-					game.world.randomY, 'spacewar', 'staralpha.png');
+				game.world.randomY, 'spacewar', 'staralpha.png');
 			let random = game.rnd.realInRange(0, 0.6);
 			sprite.scale.setTo(random, random)
 		}
 	},
 
-	create : function() {
+	create: function () {
 		this.showHTML();
 	},
 
-	login(){
+	login: function() {
 		if (typeof game.global.myPlayer.id !== 'undefined') {
 			var name = document.getElementById("user").value;
 			game.global.myPlayer.username = name;
 
-			if(name === 'undefined') name = 'noone';
-			
+			if (name === 'undefined') name = 'noone';
+
 			let message = {
-				event : 'JOIN',
-				username : name
+				event: 'LOGIN',
+				username: name
 			}
 
 			game.global.socket.send(JSON.stringify(message))
@@ -51,11 +51,11 @@ Spacewar.menuState.prototype = {
 
 	},
 
-	update : function() {		
-	
-	},	
+	update: function () {
 
-	hideHTML() {    
+	},
+
+	hideHTML() {
 		document.getElementById("user").style.display = "none";
 		document.getElementById("loginButton").style.display = "none";
 	},

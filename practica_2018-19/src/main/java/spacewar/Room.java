@@ -30,6 +30,7 @@ public class Room extends TextWebSocketHandler{
 	//private SpacewarGame game;
 	public GameMode mode;
 	private boolean gameStarted = false;	
+
 	
 	public Room(String name, int mode) {
 		this.NAME = name;
@@ -37,25 +38,13 @@ public class Room extends TextWebSocketHandler{
 		//game = SpacewarGame.INSTANCE;		
 	}	
 	
-	public void joinPlayer(Player player) {
-		if(gameStarted) return;
-		
-		/*game.addPlayer(player);
-		switch(mode) {
-			case PVP:
-				if(game.getNumPlayer().equals(2)) {
-					startGame();
-				}
-				break;
-			case BATTLEROYALE:
-				if(game.getNumPlayer().equals(3)) {
-					startGame();
-				}
-				break;
-		}*/
-
-		players.put(player.getName(), player);
-		addPlayer(player);
+	public synchronized void joinPlayer(Player player) {
+		if(gameStarted) return;	
+	
+		addPlayer(player);		
+	}
+	
+	public synchronized void tryToStart() {
 		switch(mode) {
 			case PVP:
 				if(players.size() == 2) {
@@ -69,19 +58,20 @@ public class Room extends TextWebSocketHandler{
 					startGame();
 				}
 				break;
-		}
+			default:
+				System.out.println("Should never happen");
+				break;
+			}
 	}
 
 	
-	public String getModeName() {
+	public synchronized String getModeName() {
 		return mode.toString();
 	}
 	
-	public void startGame() {
-		//game.startGameLoop();
-		//game.broadcast("START GAME");
-		this.startGameLoop();
-		this.broadcast("START GAME");
+	public synchronized void startGame() {		
+		startGameLoop();
+		broadcast("START GAME");
 		gameStarted = true;
 	}
 	
@@ -99,6 +89,7 @@ public class Room extends TextWebSocketHandler{
 	private Map<Integer, Projectile> projectiles = new ConcurrentHashMap<>();
 	private AtomicInteger numPlayers = new AtomicInteger(0);
 	private ChatHandler chatHandler = new ChatHandler(players);
+	
 	public void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
@@ -159,7 +150,10 @@ public class Room extends TextWebSocketHandler{
 	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
-				player.getSession().sendMessage(new TextMessage(message.toString()));
+				ObjectNode msg = mapper.createObjectNode();
+				msg.put("event", message);
+				
+				player.getSession().sendMessage(new TextMessage(msg.toString()));
 			} catch (Throwable ex) {
 				System.err.println("Execption sending message to player " + player.getSession().getId());
 				ex.printStackTrace(System.err);
