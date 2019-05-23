@@ -83,7 +83,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				msg.put("event", "JOIN ROOM");
 				msg.put("room", node.get("roomName").asText());
 				
-				player.setRoom(rooms.get(node.get("roomName").toString()));
+				player.setRoom(rooms.get(node.get("roomName").asText()));
 				player.getSession().sendMessage(new TextMessage(msg.toString()));				
 				break;
 			case "JOIN RANDOM ROOM":
@@ -195,6 +195,5 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	
 	public void joinRoom(Player player, String roomName) {
 		rooms.get(roomName).joinPlayer(player);
-		System.out.println(rooms.get(roomName).players.keySet());
 	}
 }

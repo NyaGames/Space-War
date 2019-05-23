@@ -14,6 +14,8 @@ window.onload = function () {
 
 	// WEBSOCKET CONFIGURATOR
 	game.global.socket = new WebSocket("ws://" + window.location.host + "/spacewar");
+	
+	game.stage.disableVisibilityChange=true;
 
 	game.global.socket.onopen = () => {
 		if (game.global.DEBUG_MODE) {

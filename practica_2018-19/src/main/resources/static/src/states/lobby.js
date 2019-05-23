@@ -61,7 +61,7 @@ function upButton(e) {
 	if (game.global.DEBUG_MODE) {
 		console.log("[DEBUG] JOINING **e.room** ROOM");
 	}
-
+	
 	let message = {
 		event: 'JOIN ROOM',
 		roomName: e.room

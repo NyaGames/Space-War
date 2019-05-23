@@ -15,12 +15,16 @@ Spacewar.preGameState.prototype = {
 
 	create: function () {
 		let nameText = game.add.text(10, game.world.height - 50, "Esperando al resto de jugadores...", { font: "20px", fill: "#fff", align: "center" })
-	},
-
-	update: function () {
 		let message = {
 			event: 'MATCHMAKING'
 		}
 		game.global.socket.send(JSON.stringify(message))
+	},
+
+	update: function () {
+		/*let message = {
+			event: 'MATCHMAKING'
+		}
+		game.global.socket.send(JSON.stringify(message))*/
 	}
 }
