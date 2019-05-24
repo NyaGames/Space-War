@@ -20,12 +20,17 @@ Spacewar.lobbyState.prototype = {
 		}
 
 		game.global.socket.send(JSON.stringify(message))
+		
+		this.escapeKey = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 
 		this.nameText = game.add.text(10, 50, "No rooms avaible", { font: "20px", fill: "#fff", align: "center" })
 	},
 
 	update: function () {		
-
+		
+		if (this.escapeKey.isDown)
+			game.state.start("matchmakingState")
+		
 		this.rooms = game.global.myPlayer.rooms;
 
 		if (this.rooms != undefined && this.rooms.length != 0) {	
@@ -46,7 +51,7 @@ Spacewar.lobbyState.prototype = {
 				button.onInputUp.add(upButton, this);				
 			
 			}
-			let button = game.add.button(620, 200, 'buttonSprite', pressButton, this, 2, 1, 0)
+			let button = game.add.button(970, 560, 'buttonSprite', pressButton, this, 2, 1, 0)
 			button.width = 100;
 			button.height = 30;
 			button.anchor.setTo(0.5);
