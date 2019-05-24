@@ -46,6 +46,14 @@ Spacewar.lobbyState.prototype = {
 				button.onInputUp.add(upButton, this);				
 			
 			}
+			let button = game.add.button(620, 200, 'buttonSprite', pressButton, this, 2, 1, 0)
+			button.width = 100;
+			button.height = 30;
+			button.anchor.setTo(0.5);
+
+			button.onInputOver.add(overButton, this);
+			button.onInputOut.add(outButton, this);
+			button.onInputUp.add(randomButton, this);	
 		}else{
 			this.nameText.setText("No rooms avaible")
 		}
@@ -59,9 +67,9 @@ function overButton(e) {
 
 function upButton(e) {
 	if (game.global.DEBUG_MODE) {
-		console.log("[DEBUG] JOINING **e.room** ROOM");
-	}
-	
+			console.log("[DEBUG] JOINING **e.room** ROOM");
+		}
+		
 	let message = {
 		event: 'JOIN ROOM',
 		roomName: e.room
@@ -76,4 +84,12 @@ function outButton(e) {
 
 function pressButton(e) {
 	e.tint = 0x00000;	
+}
+
+function randomButton(e) {	
+	let message = {
+			event: 'JOIN RANDOM ROOM',
+	}
+
+	game.global.socket.send(JSON.stringify(message))	
 }
