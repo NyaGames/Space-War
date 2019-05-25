@@ -20,11 +20,4 @@ Spacewar.preGameState.prototype = {
 		}
 		game.global.socket.send(JSON.stringify(message))
 	},
-
-	update: function () {
-		/*let message = {
-			event: 'MATCHMAKING'
-		}
-		game.global.socket.send(JSON.stringify(message))*/
-	}
 }

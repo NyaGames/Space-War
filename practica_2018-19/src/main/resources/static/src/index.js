@@ -77,6 +77,9 @@ window.onload = function () {
 			case 'START GAME':
 				game.state.start("gameState")
 				break
+			case 'FINISH GAME':
+				game.state.start("finishGameState")
+				break
 			case 'JOIN ROOM':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] JOIN ROOM message recieved')
@@ -251,6 +254,7 @@ window.onload = function () {
 	game.state.add('matchmakingState', Spacewar.matchmakingState)
 	game.state.add('roomState', Spacewar.roomState)
 	game.state.add('preGameState', Spacewar.preGameState)
+	game.state.add('finishGameState', Spacewar.finishGameState)
 	game.state.add('gameState', Spacewar.gameState)
 	game.state.add('createRoomState', Spacewar.createRoomState)
 

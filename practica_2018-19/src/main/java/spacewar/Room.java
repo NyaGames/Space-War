@@ -111,6 +111,7 @@ public class Room extends TextWebSocketHandler{
 		if (count == 1) {
 			System.out.println("IS ALREADY DEAD");
 			this.stopGameLoop();
+			broadcast("FINISH GAME");
 		}
 		chatHandler.updateChat(players);
 		json.put("event", "REMOVE PLAYER");
@@ -149,6 +150,7 @@ public class Room extends TextWebSocketHandler{
 	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
+				
 				ObjectNode msg = mapper.createObjectNode();
 				msg.put("event", message);
 				
