@@ -20,6 +20,7 @@ public class Player extends Spaceship {
 	private int hp = initialHp;
 	private int ammo = maxAmmo;
 	private float boost = maxBoost;
+	private int punctuation = 0;
 
 
 	public String getName() {
@@ -101,5 +102,13 @@ public class Player extends Spaceship {
 
 	public void setRoom(Room room) {
 		this.room = room;
+	}
+
+	public int getPunctuation() {
+		return punctuation;
+	}
+
+	public void addPunctuation(int punctuation) {
+		this.punctuation += punctuation;
 	}
 }

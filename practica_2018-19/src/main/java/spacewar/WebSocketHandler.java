@@ -137,6 +137,9 @@ public class WebSocketHandler extends TextWebSocketHandler{
 					}
 				}
 				break;
+			case "GET PUNCTUATION":
+				sendPunctuations(player);
+				break;
 			default:
 				break;
 			}
@@ -188,6 +191,21 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				
 				avaibleRooms.add(roomNode);
 			}					
+		}						
+
+		player.getSession().sendMessage(new TextMessage(msg.toString()));
+	}
+	
+	public synchronized void sendPunctuations(Player player) throws IOException {
+		ObjectNode msg = mapper.createObjectNode();
+		msg.put("event", "GET PUNCTUATION");					
+		ArrayNode punctuations = msg.putArray("punctuations");		
+		for(Player p : player.getRoom().getPlayers()) {			
+			ObjectNode playerNode = mapper.createObjectNode();
+			playerNode.put("player", p.getName());
+			playerNode.put("punctuation", p.getPunctuation());				
+			
+			punctuations.add(playerNode);							
 		}							
 		System.out.println(msg.toString());
 		player.getSession().sendMessage(new TextMessage(msg.toString()));

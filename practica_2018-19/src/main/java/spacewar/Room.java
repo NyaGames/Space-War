@@ -98,7 +98,6 @@ public class Room extends TextWebSocketHandler{
 		chatHandler.updateChat(players);
 	}
 
-
 	public Collection<Player> getPlayers() {
 		return players.values();
 	}

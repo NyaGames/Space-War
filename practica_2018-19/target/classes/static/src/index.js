@@ -87,6 +87,15 @@ window.onload = function () {
 				}
 				game.state.start("preGameState")
 				break
+			case 'GET PUNCTUATION':
+				if (game.global.DEBUG_MODE) {
+					console.log('[DEBUG] GET PUNCTUATION message recieved')
+					console.dir(msg)
+				}
+
+				game.global.myPlayer.punctuations = msg.punctuations;
+				break;
+				
 			case 'GAME STATE UPDATE':
 				if (game.global.DEBUG_MODE) {
 					console.log('[DEBUG] GAME STATE UPDATE message recieved')
