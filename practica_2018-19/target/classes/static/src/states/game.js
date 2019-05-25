@@ -122,24 +122,4 @@ Spacewar.gameState.prototype = {
 		game.global.socket.send(JSON.stringify(msg))
 	},
 
-	getPunctuations: function(){
-		let message = {
-			event: 'GET PUNCTUATION',
-		}
-	
-		game.global.socket.send(JSON.stringify(message))
-	},
-
-	showPunctuations: function(){
-		this.getPunctuations();
-
-		this.punctuations = game.global.myPlayer.punctuations;
-
-		for (let i = 0; i < this.punctuations.lenght; i++) {
-			game.add.text(420, 20 + i * 50, this.punctuations[i].player, { font: "20px", fill: "#fff", align: "center" });
-			game.add.text(620, 20 + i * 50, this.punctuations[i].punctuation, { font: "20px", fill: "#fff", align: "center" });
-		}
-	}
-
-
 }

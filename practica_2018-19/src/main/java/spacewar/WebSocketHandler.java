@@ -143,6 +143,8 @@ public class WebSocketHandler extends TextWebSocketHandler{
 			case "GET PUNCTUATION":
 				sendPunctuations(player);
 				break;
+			case "EXIT PUNCTUATION":
+				removePlayerFromRoom(player);
 			default:
 				break;
 			}
@@ -168,11 +170,11 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	}
 
 	
-	public Room GetRoom(String roomName) {
+	public synchronized Room GetRoom(String roomName) {
 		return rooms.get(roomName);
 	}
 	
-	public Room CreateRoom(String roomName, int mode) {
+	public synchronized Room CreateRoom(String roomName, int mode) {
 		if(rooms.contains(roomName)) return null;
 		
 		Room room = new Room(roomName, mode);
@@ -180,7 +182,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		return room;
 	}
 	
-	public void sendRooms(Player player) throws IOException {
+	public synchronized void sendRooms(Player player) throws IOException {
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "GET ROOMS");					
 		ArrayNode avaibleRooms = msg.putArray("avaibleRooms");
@@ -214,7 +216,17 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 	}
 	
-	public void joinRoom(Player player, String roomName) {
+	public synchronized void joinRoom(Player player, String roomName) {
 		rooms.get(roomName).joinPlayer(player);
+	}
+	
+	public synchronized void removePlayerFromRoom(Player player) {
+		Room room = player.getRoom();
+		room.removePlayer(player);
+		player.restartPlayer();
+		
+		if(room.getNumPlayer() <= 0) {
+			rooms.remove(room.NAME);
+		}
 	}
 }

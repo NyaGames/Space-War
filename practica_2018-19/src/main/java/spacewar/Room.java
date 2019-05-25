@@ -90,7 +90,7 @@ public class Room extends TextWebSocketHandler{
 	private AtomicInteger numPlayers = new AtomicInteger(0);
 	private ChatHandler chatHandler = new ChatHandler(players);
 	
-	public void addPlayer(Player player) {
+	public synchronized void addPlayer(Player player) {
 		players.put(player.getSession().getId(), player);
 
 		numPlayers.getAndIncrement();
@@ -98,13 +98,30 @@ public class Room extends TextWebSocketHandler{
 		chatHandler.updateChat(players);
 	}
 
-	public Collection<Player> getPlayers() {
+	public synchronized Collection<Player> getPlayers() {
 		return players.values();
 	}
 
-	public void removePlayer(Player player) {
+	public synchronized void removePlayer(Player player, Projectile bullet) {
 		ObjectNode json = mapper.createObjectNode();
-		players.remove(player.getSession().getId());
+		//players.remove(player.getSession().getId());
+
+		int count = this.numPlayers.decrementAndGet();
+		//solo puede quedar uno en el battle royale de las naves
+		if (count == 1) {
+			System.out.println("IS ALREADY DEAD");
+			this.stopGameLoop();
+			broadcast("FINISH GAME");
+		}
+		chatHandler.updateChat(players);
+		bullet.getOwner().addPunctuation(1);
+		json.put("event", "REMOVE PLAYER");
+		json.put("dead_id", player.getPlayerId());
+		this.broadcast(json.toString());
+	}
+	public synchronized void removePlayer(Player player) {
+		ObjectNode json = mapper.createObjectNode();
+		//players.remove(player.getSession().getId());
 
 		int count = this.numPlayers.decrementAndGet();
 		//solo puede quedar uno en el battle royale de las naves
@@ -119,35 +136,35 @@ public class Room extends TextWebSocketHandler{
 		this.broadcast(json.toString());
 	}
 	
-	public int getNumPlayer() {
+	public synchronized int getNumPlayer() {
 		return numPlayers.get();
 	}
 
-	public void addProjectile(int id, Projectile projectile) {
+	public synchronized void addProjectile(int id, Projectile projectile) {
 		System.out.println("projectil: "+id);
 		projectiles.put(id, projectile);
 	}
 	
-	public Collection<Projectile> getProjectiles() {
+	public synchronized Collection<Projectile> getProjectiles() {
 		return projectiles.values();
 	}
 
-	public void removeProjectile(Projectile projectile) {
+	public synchronized void removeProjectile(Projectile projectile) {
 		players.remove(projectile.getId(), projectile);
 	}
 
-	public void startGameLoop() {
+	public synchronized void startGameLoop() {
 		scheduler = Executors.newScheduledThreadPool(1);
 		scheduler.scheduleAtFixedRate(() -> tick(), TICK_DELAY, TICK_DELAY, TimeUnit.MILLISECONDS);
 	}
 
-	public void stopGameLoop() {
+	public synchronized void stopGameLoop() {
 		if (scheduler != null) {
 			scheduler.shutdown();
 		}
 	}
 
-	public void broadcast(String message) {
+	public synchronized void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
 				
@@ -162,8 +179,20 @@ public class Room extends TextWebSocketHandler{
 			}
 		}
 	}
+	
+	public synchronized void broadcastUpdate(String message) {
+		for (Player player : getPlayers()) {
+			try {					
+				player.getSession().sendMessage(new TextMessage(message));
+			} catch (Throwable ex) {
+				System.err.println("Execption sending message to player " + player.getSession().getId());
+				ex.printStackTrace(System.err);
+				this.removePlayer(player);
+			}
+		}
+	}
 
-	private void tick() {
+	private synchronized void tick() {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodePlayers = mapper.createArrayNode();
 		ArrayNode arrayNodeProjectiles = mapper.createArrayNode();
@@ -184,7 +213,7 @@ public class Room extends TextWebSocketHandler{
 						projectile.setHit(true);
 						player.hit(projectile.getDamage());
 						if(player.getHp() <= 0) {
-							player.getRoom().removePlayer(player);
+							player.getRoom().removePlayer(player, projectile);
 						}
 						break;
 					}
@@ -234,14 +263,9 @@ public class Room extends TextWebSocketHandler{
 			json.put("event", "GAME STATE UPDATE");
 			json.putPOJO("players", arrayNodePlayers);
 			json.putPOJO("projectiles", arrayNodeProjectiles);
-			this.broadcast(json.toString());
+			this.broadcastUpdate(json.toString());
 		} catch (Throwable ex) {
 
 		}
 	}
-
-	public void handleCollision() {
-
-	}
-	
 }

@@ -111,4 +111,11 @@ public class Player extends Spaceship {
 	public void addPunctuation(int punctuation) {
 		this.punctuation += punctuation;
 	}
+	
+	public void restartPlayer() {
+		hp = initialHp;
+		ammo = maxAmmo;
+		boost = maxBoost;
+	}
+	
 }

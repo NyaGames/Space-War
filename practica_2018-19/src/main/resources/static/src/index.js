@@ -97,6 +97,7 @@ window.onload = function () {
 				}
 
 				game.global.myPlayer.punctuations = msg.punctuations;
+				Spacewar.finishGameState.prototype.showPunctuations();
 				break;
 				
 			case 'GAME STATE UPDATE':

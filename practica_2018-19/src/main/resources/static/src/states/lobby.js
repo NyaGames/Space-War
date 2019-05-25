@@ -41,23 +41,28 @@ Spacewar.lobbyState.prototype = {
 			game.state.start("matchmakingState")
 		
 		this.rooms = game.global.myPlayer.rooms;
+		
+		var texts = []
+		var buttons = []
 
 		if (this.rooms != undefined && this.rooms.length != 0) {	
 			this.nameText.setText("")	
 			for (let i = 0; i < this.rooms.length; i++) {
-				game.add.text(20, 20 + i * 50, this.rooms[i].key, { font: "20px", fill: "#fff", align: "center" });
-				game.add.text(220, 20 + i * 50, this.rooms[i].gameMode, { font: "20px", fill: "#fff", align: "center" });
-				game.add.text(420, 20 + i * 50, this.rooms[i].numPlayers + "/2", { font: "20px", fill: "#fff", align: "center" });
+				texts.push(game.add.text(20, 20 + i * 50, this.rooms[i].key, { font: "20px", fill: "#fff", align: "center" }));
+				texts.push(game.add.text(220, 20 + i * 50, this.rooms[i].gameMode, { font: "20px", fill: "#fff", align: "center" }));
+				texts.push(game.add.text(420, 20 + i * 50, this.rooms[i].numPlayers + "/2", { font: "20px", fill: "#fff", align: "center" }));
 
-				let button = game.add.button(620, 20 + i * 50, 'buttonSprite', pressButton, this, 2, 1, 0)
-				button.width = 100;
+				let button = game.add.button(620, 20 + i * 50, 'buttonSprite', pressButton, this, 2, 1, 0);
+				button.width = 100; 
 				button.height = 30;
 				button.anchor.setTo(0.5);
 				button.room = this.rooms[i].key;
 
 				button.onInputOver.add(overButton, this);
 				button.onInputOut.add(outButton, this);
-				button.onInputUp.add(upButton, this);				
+				button.onInputUp.add(upButton, this);		
+				
+				buttons.push(button);
 			
 			}
 			let button = game.add.button(970, 560, 'buttonSprite', pressButton, this, 2, 1, 0)
@@ -68,6 +73,14 @@ Spacewar.lobbyState.prototype = {
 			button.onInputOver.add(overButton, this);
 			button.onInputOut.add(outButton, this);
 			button.onInputUp.add(randomButton, this);	
+			
+		  for(let i = 0; i < texts.length; i++){
+			  texts[i].destroy();			 
+		  }
+		  
+		  for(let i = 0; i < buttons.length; i++){
+			  buttons[i].destroy();			 
+		  }
 		}else{
 			this.nameText.setText("No rooms avaible")
 		}
