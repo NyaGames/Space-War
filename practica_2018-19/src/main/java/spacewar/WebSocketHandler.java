@@ -17,6 +17,7 @@ import spacewar.Room.GameMode;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.*;
 
 public class WebSocketHandler extends TextWebSocketHandler{
 
@@ -26,6 +27,8 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	private ObjectMapper mapper = new ObjectMapper();
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);	
+	
+	private Lock em = new ReentrantLock();
 	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -130,12 +133,12 @@ public class WebSocketHandler extends TextWebSocketHandler{
 					}
 				}
 				break;
-			case "CHAT":		
+			case "CHAT":	
+				em.lock();
 				for(Player participant : player.getRoom().getPlayers()) {
-					if(!participant.getSession().getId().equals(session.getId())) {
-						participant.getSession().sendMessage(message);
-					}
+					participant.getSession().sendMessage(message);
 				}
+				em.unlock();
 				break;
 			case "GET PUNCTUATION":
 				sendPunctuations(player);

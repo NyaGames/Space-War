@@ -234,10 +234,12 @@ window.onload = function () {
 			message: $('#message').val()
 		}
 
+		/*
 		$('#message').val('');
 
 		$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
-
+		 */
+		
 		game.global.socket.send(JSON.stringify(msg));
 	});
 
