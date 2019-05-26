@@ -28,8 +28,6 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	private AtomicInteger playerId = new AtomicInteger(0);
 	private AtomicInteger projectileId = new AtomicInteger(0);	
 	
-	private Lock em = new ReentrantLock();
-	
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		Player player = new Player(playerId.incrementAndGet(), session);
@@ -139,11 +137,9 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				}
 				break;
 			case "CHAT":	
-				em.lock();
 				for(Player participant : player.getRoom().getPlayers()) {
 					participant.getSession().sendMessage(message);
 				}
-				em.unlock();
 				break;
 			case "GET PUNCTUATION":
 				sendPunctuations(player);
@@ -180,11 +176,11 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	}
 
 	
-	public synchronized Room GetRoom(String roomName) {
+	public Room GetRoom(String roomName) {
 		return rooms.get(roomName);
 	}
 	
-	public synchronized Room CreateRoom(String roomName, int mode) {
+	public Room CreateRoom(String roomName, int mode) {
 		if(rooms.contains(roomName)) return null;
 		
 		Room room = new Room(roomName, mode);
@@ -192,7 +188,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		return room;
 	}
 	
-	public synchronized void sendRooms(Player player) throws IOException {
+	public void sendRooms(Player player) throws IOException {
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "GET ROOMS");					
 		ArrayNode avaibleRooms = msg.putArray("avaibleRooms");
@@ -211,7 +207,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 	}
 	
-	public synchronized void sendPunctuations(Player player) throws IOException {
+	public void sendPunctuations(Player player) throws IOException {
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "GET PUNCTUATION");					
 		ArrayNode punctuations = msg.putArray("punctuations");		
@@ -226,7 +222,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		player.getSession().sendMessage(new TextMessage(msg.toString()));
 	}
 	
-	public synchronized void joinRoom(Player player, String roomName) {
+	public void joinRoom(Player player, String roomName) {
 		rooms.get(roomName).joinPlayer(player);
 	}
 	

@@ -1,6 +1,7 @@
 package spacewar;
 
 import java.util.Collection;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -9,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.*;
 
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -30,7 +32,9 @@ public class Room extends TextWebSocketHandler{
 	//private SpacewarGame game;
 	public GameMode mode;
 	public boolean gameStarted = false;	
-
+	private Lock emJoin = new ReentrantLock();
+	private Lock emBroadcast = new ReentrantLock();
+	private Lock emBroadcastUpdate = new ReentrantLock();
 	
 	public Room(String name, int mode) {
 		this.NAME = name;
@@ -38,9 +42,13 @@ public class Room extends TextWebSocketHandler{
 		//game = SpacewarGame.INSTANCE;		
 	}	
 	
-	public synchronized void joinPlayer(Player player) {
-		if(gameStarted) return;	
-	
+	public void joinPlayer(Player player) {
+		emJoin.lock();
+		try {
+			if(gameStarted) return;	
+		}finally {
+			emJoin.unlock();
+		}
 		addPlayer(player);		
 	}
 	
@@ -98,7 +106,7 @@ public class Room extends TextWebSocketHandler{
 		chatHandler.updateChat(players);
 	}
 
-	public synchronized Collection<Player> getPlayers() {
+	public Collection<Player> getPlayers() {
 		return players.values();
 	}
 
@@ -136,20 +144,20 @@ public class Room extends TextWebSocketHandler{
 		this.broadcast(json.toString());
 	}
 	
-	public synchronized int getNumPlayer() {
+	public int getNumPlayer() {
 		return numPlayers.get();
 	}
 
-	public synchronized void addProjectile(int id, Projectile projectile) {
+	public void addProjectile(int id, Projectile projectile) {
 		System.out.println("projectil: "+id);
 		projectiles.put(id, projectile);
 	}
 	
-	public synchronized Collection<Projectile> getProjectiles() {
+	public Collection<Projectile> getProjectiles() {
 		return projectiles.values();
 	}
 
-	public synchronized void removeProjectile(Projectile projectile) {
+	public void removeProjectile(Projectile projectile) {
 		players.remove(projectile.getId(), projectile);
 	}
 
@@ -164,14 +172,18 @@ public class Room extends TextWebSocketHandler{
 		}
 	}
 
-	public synchronized void broadcast(String message) {
+	public void broadcast(String message) {
 		for (Player player : getPlayers()) {
 			try {
 				
 				ObjectNode msg = mapper.createObjectNode();
 				msg.put("event", message);
-				
-				player.getSession().sendMessage(new TextMessage(msg.toString()));
+				emBroadcast.lock();
+				try {
+					player.getSession().sendMessage(new TextMessage(msg.toString()));
+				}finally {
+					emBroadcast.unlock();
+				}
 			} catch (Throwable ex) {
 				System.err.println("Execption sending message to player " + player.getSession().getId());
 				ex.printStackTrace(System.err);
@@ -180,10 +192,15 @@ public class Room extends TextWebSocketHandler{
 		}
 	}
 	
-	public synchronized void broadcastUpdate(String message) {
+	public void broadcastUpdate(String message) {
 		for (Player player : getPlayers()) {
-			try {					
-				player.getSession().sendMessage(new TextMessage(message));
+			try {
+				emBroadcastUpdate.lock();
+				try {
+					player.getSession().sendMessage(new TextMessage(message));
+				}finally {
+					emBroadcastUpdate.unlock();
+				}
 			} catch (Throwable ex) {
 				System.err.println("Execption sending message to player " + player.getSession().getId());
 				ex.printStackTrace(System.err);
@@ -192,7 +209,7 @@ public class Room extends TextWebSocketHandler{
 		}
 	}
 
-	private synchronized void tick() {
+	private void tick() {
 		ObjectNode json = mapper.createObjectNode();
 		ArrayNode arrayNodePlayers = mapper.createArrayNode();
 		ArrayNode arrayNodeProjectiles = mapper.createArrayNode();
