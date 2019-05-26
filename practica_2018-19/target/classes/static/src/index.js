@@ -225,6 +225,12 @@ window.onload = function () {
 			case 'CHAT':
 				$('#chat').val($('#chat').val() + "\n" + msg.name + ": " + msg.message);
 				break;
+			case 'ERROR':
+				alert("Error: Nombre invalido")
+				break;
+			case 'SUCCESSFUL':
+				Spacewar.createRoomState.prototype.creationOk();
+				break;
 			default:
 				console.dir(msg)
 				break

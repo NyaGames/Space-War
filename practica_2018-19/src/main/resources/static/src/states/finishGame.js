@@ -54,7 +54,7 @@ function upUpdateButton(e) {
 	
 	
 	let message = {
-		event: 'EXIT ROOM',	
+		event: 'EXIT PUNCTUATION',	
 	}
 
 	game.global.socket.send(JSON.stringify(message))

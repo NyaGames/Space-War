@@ -44,9 +44,6 @@ Spacewar.createRoomState.prototype = {
 
         game.global.socket.send(JSON.stringify(message))
 
-        this.hideHTML();
-
-        game.state.start('preGameState')
     },
 
     showHTML(){
@@ -59,5 +56,10 @@ Spacewar.createRoomState.prototype = {
         document.getElementById("roomName").style.display = "none";
 		document.getElementById("gameMode").style.display = "none";
 		document.getElementById("createRoom2").style.display = "none";
-    }    
+    },
+    
+    creationOk(){
+        this.hideHTML();
+        game.state.start('preGameState')
+    }
 }

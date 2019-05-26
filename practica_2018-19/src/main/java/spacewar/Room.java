@@ -29,7 +29,7 @@ public class Room extends TextWebSocketHandler{
 	public String NAME;
 	//private SpacewarGame game;
 	public GameMode mode;
-	private boolean gameStarted = false;	
+	public boolean gameStarted = false;	
 
 	
 	public Room(String name, int mode) {

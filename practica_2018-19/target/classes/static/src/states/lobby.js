@@ -25,14 +25,14 @@ Spacewar.lobbyState.prototype = {
 
 		this.nameText = game.add.text(10, 50, "No rooms avaible", { font: "20px", fill: "#fff", align: "center" })
 
-		let button = game.add.button(this.game.width - 75, this.game.height - 75, 'buttonSprite', updateRooms, this, 2, 1, 0)
+		let button = game.add.button(this.game.width - 75, this.game.height - 75, 'buttonSprite', pressButton, this, 2, 1, 0)
 		button.width = 200;
 		button.height = 100;
 		button.anchor.setTo(0.5);
 
 		button.onInputOver.add(overButton, this);
 		button.onInputOut.add(outButton, this);
-		button.onInputUp.add(randomButton, this);	
+		button.onInputUp.add(updateRooms, this);	
 	},
 
 	update: function () {		
@@ -65,22 +65,15 @@ Spacewar.lobbyState.prototype = {
 				buttons.push(button);
 			
 			}
-			let button = game.add.button(970, 560, 'buttonSprite', pressButton, this, 2, 1, 0)
+			/*let button = game.add.button(850, 560, 'buttonSprite', pressButton, this, 2, 1, 0)
 			button.width = 100;
 			button.height = 30;
 			button.anchor.setTo(0.5);
 
 			button.onInputOver.add(overButton, this);
 			button.onInputOut.add(outButton, this);
-			button.onInputUp.add(randomButton, this);	
+			button.onInputUp.add(randomButton, this);*/	
 			
-		  for(let i = 0; i < texts.length; i++){
-			  texts[i].destroy();			 
-		  }
-		  
-		  for(let i = 0; i < buttons.length; i++){
-			  buttons[i].destroy();			 
-		  }
 		}else{
 			this.nameText.setText("No rooms avaible")
 		}
@@ -122,9 +115,10 @@ function randomButton(e) {
 }
 
 function updateRooms(e){
-	let message = {
+	/*let message = {
 		event: 'GET ROOMS',
 	}
 
-	game.global.socket.send(JSON.stringify(message))
+	game.global.socket.send(JSON.stringify(message))*/+
+	game.state.start("lobbyState");
 }
