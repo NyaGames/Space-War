@@ -12,6 +12,7 @@ Spacewar.lobbyState.prototype = {
 
 	preload: function () {
 		game.load.image('buttonSprite', 'assets/images/button.png');
+		game.load.image('updateButton', 'assets/images/updateButton.png');
 	},
 
 	create: function () {
@@ -25,7 +26,7 @@ Spacewar.lobbyState.prototype = {
 
 		this.nameText = game.add.text(10, 50, "No rooms avaible", { font: "20px", fill: "#fff", align: "center" })
 
-		let button = game.add.button(this.game.width - 75, this.game.height - 75, 'buttonSprite', pressButton, this, 2, 1, 0)
+		let button = game.add.button(this.game.width - 75, this.game.height - 75, 'updateButton', pressButton, this, 2, 1, 0)
 		button.width = 200;
 		button.height = 100;
 		button.anchor.setTo(0.5);
@@ -65,14 +66,14 @@ Spacewar.lobbyState.prototype = {
 				buttons.push(button);
 			
 			}
-			/*let button = game.add.button(850, 560, 'buttonSprite', pressButton, this, 2, 1, 0)
+			let button = game.add.button(this.game.width - 50, 475, 'buttonSprite', pressButton, this, 2, 1, 0)
 			button.width = 100;
 			button.height = 30;
 			button.anchor.setTo(0.5);
 
 			button.onInputOver.add(overButton, this);
 			button.onInputOut.add(outButton, this);
-			button.onInputUp.add(randomButton, this);*/	
+			button.onInputUp.add(randomButton, this);
 			
 		}else{
 			this.nameText.setText("No rooms avaible")
