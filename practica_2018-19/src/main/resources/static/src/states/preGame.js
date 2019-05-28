@@ -1,6 +1,7 @@
 Spacewar.preGameState = function (game) {
 }
 
+/**Estado al que va un jugador mientras la sala no tenga suficientes jugadores */
 Spacewar.preGameState.prototype = {
 
 	init: function () {
@@ -15,6 +16,8 @@ Spacewar.preGameState.prototype = {
 
 	create: function () {
 		let nameText = game.add.text(10, game.world.height - 50, "Esperando al resto de jugadores...", { font: "20px", fill: "#fff", align: "center" })
+
+		//Mandamos el mensaje para preguntar si ya hay gente suficiente.
 		let message = {
 			event: 'MATCHMAKING'
 		}

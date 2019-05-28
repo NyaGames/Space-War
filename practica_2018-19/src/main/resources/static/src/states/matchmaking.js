@@ -2,6 +2,8 @@ Spacewar.matchmakingState = function (game) {
 	this.numStars = 100
 }
 
+/*En este estado el jugador simplemente tendrá que elgegir si quiere crear una sala o meterse en una existente*/
+
 Spacewar.matchmakingState.prototype = {
 
 	init: function () {
@@ -45,7 +47,9 @@ Spacewar.matchmakingState.prototype = {
 		if (typeof game.global.myPlayer.room !== 'undefined') {
 			if (game.global.DEBUG_MODE) {
 				console.log("[DEBUG] Joined room " + game.global.myPlayer.room);
-			}
+			}	game.global.myPlayer.room = {
+					name: msg.room
+				}
 		}
 	},
 

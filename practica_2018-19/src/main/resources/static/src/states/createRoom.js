@@ -2,6 +2,10 @@ Spacewar.createRoomState = function(game) {
 	this.numStars = 100
 }
 
+/*En este estado el jugador puede crear una sala. Para ello tiene que introducir el nombre de la sala y el modo de juego. Si no se introduce
+modo de juego, el modo de juego predeterminado es PVP. Si se introduce un nombre ya usado en otra sala, saldrá un prompt de error y la sala no 
+se creará*/
+
 Spacewar.createRoomState.prototype = {
 
 	init : function() {
@@ -40,6 +44,7 @@ Spacewar.createRoomState.prototype = {
 
         if(mode === "") mode = 1;
 
+        //Manda un mensaje con la nueva sala
         let message = {
             event : 'NEW ROOM',
             name : name,

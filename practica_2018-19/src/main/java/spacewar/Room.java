@@ -29,7 +29,6 @@ public class Room extends TextWebSocketHandler{
 	}
 
 	public String NAME;
-	//private SpacewarGame game;
 	public GameMode mode;
 	public boolean gameStarted = false;	
 	private Lock emJoin = new ReentrantLock();
@@ -38,10 +37,10 @@ public class Room extends TextWebSocketHandler{
 	
 	public Room(String name, int mode) {
 		this.NAME = name;
-		this.mode = GameMode.values()[mode];
-		//game = SpacewarGame.INSTANCE;		
+		this.mode = GameMode.values()[mode];			
 	}	
 	
+	//Llama a añadir el jugador solo si el juego no ha empezado todavía.
 	public void joinPlayer(Player player) {
 		emJoin.lock();
 		try {
@@ -52,17 +51,18 @@ public class Room extends TextWebSocketHandler{
 		addPlayer(player);		
 	}
 	
+	//Mira a ver si la sala tiene suficientes jugadores para empezar la partida, y si los tiene, llama a que empiece.
 	public synchronized void tryToStart() {
 		switch(mode) {
 			case PVP:
 				if(players.size() == 2) {
-					System.out.println("Let's jugar uno pa uno");
+					System.out.println("Starting PVP");
 					startGame();
 				}
 				break;
 			case BATTLEROYALE:
-				if(players.size() == 3) {
-					System.out.println("Let's jugar todos para todos");
+				if(players.size() >= 10) {
+					System.out.println("Starting BATTLEROYALE");
 					startGame();
 				}
 				break;
@@ -81,9 +81,8 @@ public class Room extends TextWebSocketHandler{
 		startGameLoop();
 		broadcast("START GAME");
 		gameStarted = true;
-	}
-	
-	//voy a probar esto aunque pablo me mate a lo mejor
+	}	
+
 	private final static int FPS = 30;
 	private final static long TICK_DELAY = 1000 / FPS;
 	public final static boolean DEBUG_MODE = true;
@@ -110,12 +109,12 @@ public class Room extends TextWebSocketHandler{
 		return players.values();
 	}
 
+	//Borra a un jugador cuando le mata un proyectil
 	public synchronized void removePlayer(Player player, Projectile bullet) {
-		ObjectNode json = mapper.createObjectNode();
-		//players.remove(player.getSession().getId());
+		ObjectNode json = mapper.createObjectNode();		
 
 		int count = this.numPlayers.decrementAndGet();
-		//solo puede quedar uno en el battle royale de las naves
+		
 		if (count == 1) {
 			System.out.println("IS ALREADY DEAD");
 			this.stopGameLoop();
@@ -127,12 +126,13 @@ public class Room extends TextWebSocketHandler{
 		json.put("dead_id", player.getPlayerId());
 		this.broadcast(json.toString());
 	}
+	
+	//Borra a un jugador cuando sale de la sala de manera inesperada.
 	public synchronized void removePlayer(Player player) {
-		ObjectNode json = mapper.createObjectNode();
-		//players.remove(player.getSession().getId());
+		ObjectNode json = mapper.createObjectNode();		
 
 		int count = this.numPlayers.decrementAndGet();
-		//solo puede quedar uno en el battle royale de las naves
+		
 		if (count == 1) {
 			System.out.println("IS ALREADY DEAD");
 			this.stopGameLoop();

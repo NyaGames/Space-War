@@ -1,6 +1,7 @@
 Spacewar.finishGameState = function (game) {
 }
 
+/**Enseñamos las puntuaciones de los jugadores. Mientras no se cierre el servidor, las puntuaciones se mantienen en el tiempo */
 Spacewar.finishGameState.prototype = {
 
 	init: function () {
@@ -28,6 +29,7 @@ Spacewar.finishGameState.prototype = {
 	},
 
 	getPunctuations: function(){
+		//Hace la petición para recibir las puntuaciones del servidor.
 		let message = {
 			event: 'GET PUNCTUATION',
 		}
@@ -53,6 +55,7 @@ function upUpdateButton(e) {
 		}
 	
 	
+	//Mandamos un mensaje de que hemos salido del estado para que el servidor nos quite de la sala.
 	let message = {
 		event: 'EXIT PUNCTUATION',	
 	}

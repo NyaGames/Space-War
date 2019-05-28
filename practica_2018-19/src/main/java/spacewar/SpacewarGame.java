@@ -34,7 +34,7 @@ public class SpacewarGame {
 	private AtomicInteger numPlayers = new AtomicInteger();
 	private ChatHandler chatHandler = new ChatHandler(players);
 
-	private SpacewarGame() {
+	SpacewarGame() {
 		
 	}
 
