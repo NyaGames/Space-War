@@ -81,6 +81,7 @@ Spacewar.gameState.prototype = {
 		this.aKey = game.input.keyboard.addKey(Phaser.Keyboard.A);
 		this.dKey = game.input.keyboard.addKey(Phaser.Keyboard.D);
 		this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		this.introKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
 		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.W);
 		game.input.keyboard.removeKeyCapture(Phaser.Keyboard.S);
@@ -114,6 +115,14 @@ Spacewar.gameState.prototype = {
 			msg.movement.rotRight = true;
 		if (this.spaceKey.isDown) {
 			msg.bullet = this.fireBullet()
+		}
+		if (this.introKey.isDown){
+			var msg = {
+					event: "CHAT",
+					name: game.global.myPlayer.name.text,
+					message: $('#message').val()
+				}
+				game.global.socket.send(JSON.stringify(msg));
 		}
 
 		if (game.global.DEBUG_MODE) {

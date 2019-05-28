@@ -29,6 +29,7 @@ Spacewar.menuState.prototype = {
 
 	create: function () {
 		this.showHTML();
+		this.introKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 	},
 
 	login: function() {
@@ -52,7 +53,7 @@ Spacewar.menuState.prototype = {
 	},
 
 	update: function () {
-
+		if (this.introKey.isDown) this.login();
 	},
 
 	hideHTML() {

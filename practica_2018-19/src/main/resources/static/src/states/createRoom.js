@@ -23,10 +23,14 @@ Spacewar.createRoomState.prototype = {
 
 	create : function() {
         this.showHTML();
+		this.introKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 	},
 
 	update : function() {
-		
+		if (this.introKey.isDown){
+			this.createRoom();
+		}
+
     },   
    
 
