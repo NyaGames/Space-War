@@ -2,9 +2,6 @@ Spacewar.menuState = function (game) {
 	this.numStars = 100
 }
 
-/**En este estado el jugador podrá elegir su nombre de usuario, que se utilizará en las salas y en partida. No se comprueba que el nombre
- * de usuario ya se esté utilizando, ya que el ID del jugador ya es de por si único.
-*/
 Spacewar.menuState.prototype = {
 
 	init: function () {
@@ -37,13 +34,11 @@ Spacewar.menuState.prototype = {
 
 	login: function() {
 		if (typeof game.global.myPlayer.id !== 'undefined') {
-			//Cogemos el valor del nombre del elemento de HTML
 			var name = document.getElementById("user").value;
 			game.global.myPlayer.username = name;
 
 			if (name === 'undefined') name = 'noone';
 
-			//Mandamos un mensaje con el nuevo nombre
 			let message = {
 				event: 'LOGIN',
 				username: name

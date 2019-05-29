@@ -5,8 +5,6 @@ Spacewar.gameState = function(game) {
 	this.maxProjectiles = 800 // 8 per player
 }
 
-/*El juego como tal*/ 
-
 Spacewar.gameState.prototype = {
 
 	init : function() {
@@ -43,28 +41,24 @@ Spacewar.gameState.prototype = {
 				game.global.myPlayer.shipType)
 		game.global.myPlayer.image.anchor.setTo(0.5, 0.5)
 
-		//Interfaz
-		//Barra de vida
 		game.global.myPlayer.hpRedBar = game.add.sprite(0, 0, 'hpRedBar');
 		game.global.myPlayer.hpRedBar.anchor.set(0, 0.5);
 		game.global.myPlayer.hpRedBar.width = 75;
-		game.global.myPlayer.hpRedBar.height = 10;		
+		game.global.myPlayer.hpRedBar.height = 10;
+		
 		game.global.myPlayer.hpBar = game.add.sprite(0, 0, 'hpBar');
 		game.global.myPlayer.hpBar.anchor.set(0, 0.5);
 		game.global.myPlayer.hpBar.width = 75;
 		game.global.myPlayer.hpBar.height = 10;
 		
-		//Barra de boost
 		game.global.myPlayer.boostBar = game.add.sprite(0, 0, 'boostBar');
 		game.global.myPlayer.boostBar.anchor.set(0, 0.5);
 		game.global.myPlayer.boostBar.width = 50;
 		game.global.myPlayer.boostBar.height = 5;
 
-		//Nombre
 		game.global.myPlayer.name = game.add.text(game.global.myPlayer.x, game.global.myPlayer.y - 50, "Name", { font: "20px Chakra Petch", fill: "#fff", align: "center"});
 		game.global.myPlayer.name.anchor.set(0.5);
 		
-		//Munición
 		game.global.myPlayer.ammo = game.add.text(game.global.myPlayer.x, game.global.myPlayer.y - 50, "0", { font: "20px Chakra Petch", fill: "#ffff00", align: "center"});
 		game.global.myPlayer.ammo.anchor.set(0.5);
 		

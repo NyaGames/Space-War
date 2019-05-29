@@ -1,6 +1,5 @@
 package spacewar;
 import java.io.IOException;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -14,9 +13,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-/* Se encarga de mandar y recibir los mensajes que se mandan por el chat. Básicamente tiene una referencia a los jugadores y 
- * cuando uno de los jugadores manda un mensaje, este mensaje se manda al resto de jugadores.*/
 
 public class ChatHandler extends TextWebSocketHandler {
 	
@@ -36,16 +32,12 @@ public class ChatHandler extends TextWebSocketHandler {
 		}
 	}
 
-	//Actualiza el mapa de jugadores del chat con el nuevo que se pasa como parámetro		
 	public void updateChat(Map<String, Player> players) {
 		this.sessions.clear();
 		for(Player player : players.values()) {
 			this.sessions.put(player.getSession().getId(), player.getSession());
 		}
 	}
-	
-	//Se llama cuando se recibe un mensaje. Se pasan como parámetos la sesión que manda el mensaje y el mensaje como tal, y después se pide que se mande al 
-	//resto de jugadores.
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		
@@ -57,17 +49,15 @@ public class ChatHandler extends TextWebSocketHandler {
 		sendOtherParticipants(session, msg);
 	}
 
-	
 	private void countMessage(WebSocketSession session, String name) {
 		
 		AtomicInteger numMsgsSession = numMsgs.computeIfAbsent(session.getId(), k -> new AtomicInteger());
 		int count = numMsgsSession.incrementAndGet();
 		
-		System.out.println("User "+name+" has sent "+ count +" messages");
+		System.out.println("User "+name+" has sent "+count+" messages");
 		
 	}
 
-	//Manda un mensaje a todas las sesiones. Se pasa como parametro la sesion a la que no hay que mandatle el mensaje, y el mensaje como tal
 	private void sendOtherParticipants(WebSocketSession session, ChatMessage msg) throws IOException {
 
 		String jsonMsg = json.writeValueAsString(msg);

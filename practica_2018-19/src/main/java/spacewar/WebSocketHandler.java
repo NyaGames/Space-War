@@ -48,8 +48,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 			Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
 
 			switch (node.get("event").asText()) {
-			case "JOIN":		
-				//Se llama cuando un jugador se conecta al servidor
+			case "JOIN":					
 				msg.put("event", "JOIN");
 				msg.put("id", player.getPlayerId());
 				msg.put("shipType", player.getShipType());	
@@ -57,7 +56,6 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "NEW ROOM":
-				//Se llama cuando un jugador crea una sala
 				System.out.println("Nueva sala: "+node.get("name").asText());
 				
 				if(rooms.containsKey(node.get("name").asText())) {
@@ -81,14 +79,12 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				}
 				break;
 			case "LOGIN":
-				//Se llama cuando un jugador ha elegido su nombre y va a entrar lobby
 				msg.put("event", "LOGIN");
 				player.setName(node.get("username").asText());
 				msg.put("username", player.getName());		
 				player.getSession().sendMessage(new TextMessage(msg.toString()));
 				break;
 			case "JOIN ROOM":
-				//Se llama cuando un jugador ha elegido sala
 				joinRoom(player, node.get("roomName").asText());
 				msg.put("event", "JOIN ROOM");
 				msg.put("room", node.get("roomName").asText());
@@ -97,7 +93,6 @@ public class WebSocketHandler extends TextWebSocketHandler{
 				player.getSession().sendMessage(new TextMessage(msg.toString()));				
 				break;
 			case "JOIN RANDOM ROOM":
-				//Mete a un jugador en una sala aleatoria
 				msg.put("event", "JOIN RANDOM ROOM");
 				for(String s : rooms.keySet()) {
 					Room room = GetRoom(s);
@@ -165,6 +160,7 @@ public class WebSocketHandler extends TextWebSocketHandler{
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 
 		Player player = (Player) session.getAttributes().get(PLAYER_ATTRIBUTE);
+		//player.getRoom().getGame().removePlayer(player);
 		if(player.getRoom() != null && player.getRoom().gameStarted) {
 			for(Player p : player.getRoom().getPlayers()) {
 				removePlayerFromRoom(p);				
@@ -175,9 +171,11 @@ public class WebSocketHandler extends TextWebSocketHandler{
 		ObjectNode msg = mapper.createObjectNode();
 		msg.put("event", "REMOVE PLAYER");
 		msg.put("id", player.getPlayerId());
+		//player.getRoom().getGame().broadcast(msg.toString());;
 		player.getRoom().broadcast(msg.toString());
 	}
 
+	
 	public Room GetRoom(String roomName) {
 		return rooms.get(roomName);
 	}
